@@ -1,0 +1,9 @@
+apiVersion: kilo.squat.ai/v1alpha1
+kind: Peer
+metadata:
+  name: pixel
+spec:
+  allowedIPs:
+  - 10.5.0.4/32
+  persistentKeepalive: 10
+  publicKey: 5qAD4D4KMk1aBXX8hfPKAr9+IgCSuZ5NJo1upSar/B8=

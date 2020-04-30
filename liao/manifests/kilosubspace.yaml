@@ -1,0 +1,109 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: subspace.k.squat.ai
+  labels:
+    app.kubernetes.io/name: kilosubspace
+  name: kilosubspace
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/name: kilosubspace
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kilosubspace
+  labels:
+    app.kubernetes.io/name: kilosubspace
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kilosubspace
+  serviceName: kilosubspace
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kilosubspace
+    spec:
+      containers:
+      - image: squat/kilosubspace:arm64-25850f6d76fb83aaf5b9892b752c04d0578859ba-dirty
+        name: kilosubspace
+        command:
+        - /bin/bash
+        - -c
+        - export SUBSPACE_IPV4_GW=$(cat /etc/resolv.conf | grep nameserver | head -n 1 | awk '{print $2}') && mkdir -p /data/wireguard/{clients,peers} && kilosubspace findkey $SUBSPACE_ENDPOINT_HOST:$SUBSPACE_LISTENPORT > /data/wireguard/server.public && subspace --http-addr=$SUBSPACE_HTTP_ADDR --http-host=$SUBSPACE_HTTP_HOST --http-insecure=$SUBSPACE_HTTP_INSECURE --letsencrypt=$SUBSPACE_LETSENCRYPT --debug
+        env:
+        - name: SUBSPACE_ENDPOINT_HOST
+          value: liao.duckdns.org
+        - name: SUBSPACE_HTTP_ADDR
+          value: :8080
+        - name: SUBSPACE_HTTP_HOST
+          value: subspace.k.squat.ai
+        - name: SUBSPACE_HTTP_INSECURE
+          value: "true"
+        - name: SUBSPACE_LETSENCRYPT
+          value: "false"
+        - name: SUBSPACE_LISTENPORT
+          value: "51821"
+        ports:
+        - containerPort: 8080
+          name: http
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      serviceAccountName: kilosubspace
+  volumeClaimTemplates:
+  - metadata:
+      labels:
+        app.kubernetes.io/name: kilosubspace
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kilosubspace
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kilosubspace
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - kilo.squat.ai
+  resources:
+  - peers
+  verbs:
+  - create
+  - delete
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kilosubspace
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kilosubspace
+subjects:
+  - kind: ServiceAccount
+    name: kilosubspace
+    namespace: default

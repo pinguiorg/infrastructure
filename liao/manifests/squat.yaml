@@ -1,0 +1,12 @@
+apiVersion: kilo.squat.ai/v1alpha1
+kind: Peer
+metadata:
+  name: squat
+spec:
+  allowedIPs:
+  - 10.5.0.2/32
+  endpoint:
+    ip: 10.0.1.1
+    port: 43090
+  persistentKeepalive: 10
+  publicKey: kB0Q/wZfVLE1+fruqB/3VFuQOvg6nN3rSgEgOBKyEW4=
