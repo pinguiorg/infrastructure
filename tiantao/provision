@@ -1,0 +1,15 @@
+# Set up according to https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-3
+# Then follow these steps:
+mkdir -p /home/alarm/.ssh
+vi /home/alarm/.ssh/authorized_keys
+su root
+hostnamectl set-hostname tiantao
+vi /etc/hostname
+vi /etc/ssh/sshd_config
+systemctl restart sshd
+pacman -Syu
+pacman -S sudo curl wireguard-tools wireguard-dkms linux-headers
+visudo
+exit
+# copy k3s.yaml to /etc/rancher/k3s/k3s.yaml
+curl -sfL https://get.k3s.io | K3S_URL=https://liao:6443 K3S_TOKEN=mynodetoken sh -
