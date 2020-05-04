@@ -16,6 +16,12 @@ kind: Namespace
 metadata:
   name: dani
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dani
+  namespace: dani
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -23,17 +29,25 @@ metadata:
   namespace: dani
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
+  kind: ClusterRole
   name: admin
 subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: User
   name: dserven@gmail.com
+- kind: ServiceAccount
+  name: dani
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: leon
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: leon
+  namespace: leon
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -42,9 +56,11 @@ metadata:
   namespace: leon
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
+  kind: ClusterRole
   name: admin
 subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: User
   name: s_loechner18@stud.hwr-berlin.de
+- kind: ServiceAccount
+  name: leon

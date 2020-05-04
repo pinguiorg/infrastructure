@@ -159,9 +159,9 @@ spec:
         args:
         - -http-address=:8080
         - -upstream=http://127.0.0.1:9090
-        - -redirect-url=http://dashboard.k.squat.ai/oauth2/callback
+        - -redirect-url=$(REDIRECT_URL)
         - -provider=oidc
-        - -oidc-issuer-url=https://squat.eu.auth0.com/
+        - -oidc-issuer-url=$(ISSUER_URL)
         - -pass-authorization-header=true
         - -skip-provider-button=true
         - -client-id=$(CLIENT_ID)
@@ -170,20 +170,30 @@ spec:
         - -cookie-secure=false
         - -email-domain=*
         env:
+        - name: REDIRECT_URL
+          valueFrom:
+            secretKeyRef:
+              name: kubernetes-dashboard
+              key: REDIRECT_URL
+        - name: ISSUER_URL
+          valueFrom:
+            secretKeyRef:
+              name: kubernetes-dashboard
+              key: ISSUER_URL
         - name: CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: oauth2-proxy
+              name: kubernetes-dashboard
               key: CLIENT_ID
         - name: CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: oauth2-proxy
+              name: kubernetes-dashboard
               key: CLIENT_SECRET
         - name: COOKIE_SECRET
           valueFrom:
             secretKeyRef:
-              name: oauth2-proxy
+              name: kubernetes-dashboard
               key: COOKIE_SECRET
         ports:
         - containerPort: 8080
@@ -201,8 +211,10 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: oauth2-proxy
+  name: kubernetes-dashboard
 stringData:
+  REDIRECT_URL: http://dashboard.k.squat.ai/oauth2/callback
+  ISSUER_URL: https://squat.eu.auth0.com/
   CLIENT_ID:
   CLIENT_SECRET:
   # python -c 'import os,base64; print(base64.urlsafe_b64encode(os.urandom(16)).decode())'
