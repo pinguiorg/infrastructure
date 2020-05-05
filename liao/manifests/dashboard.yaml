@@ -168,6 +168,7 @@ spec:
         - -client-secret=$(CLIENT_SECRET)
         - -cookie-secret=$(COOKIE_SECRET)
         - -cookie-secure=false
+        - -cookie-refresh=1h
         - -email-domain=*
         env:
         - name: REDIRECT_URL
