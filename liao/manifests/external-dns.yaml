@@ -64,7 +64,7 @@ spec:
         - --domain-filter=squat.ai
         - --provider=cloudflare
         - --publish-internal-services
-        - --log-level=debug
+        - --log-level=info
         env:
         - name: CF_API_KEY
           valueFrom:
