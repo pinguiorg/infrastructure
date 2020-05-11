@@ -120,6 +120,12 @@ spec:
         - mountPath: /etc/kubernetes/kubeconfig
           name: kubeconfig
           readOnly: true
+        - name: lib-modules
+          mountPath: /lib/modules
+          readOnly: true
+        - name: xtables-lock
+          mountPath: /run/xtables.lock
+          readOnly: false
       initContainers:
       - command:
         - /bin/sh
@@ -163,3 +169,10 @@ spec:
       - hostPath:
           path: /etc/rancher/k3s/k3s.yaml
         name: kubeconfig
+      - name: lib-modules
+        hostPath:
+          path: /lib/modules
+      - name: xtables-lock
+        hostPath:
+          path: /run/xtables.lock
+          type: FileOrCreate
