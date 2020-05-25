@@ -109,6 +109,7 @@ spec:
             fieldRef:
               fieldPath: spec.nodeName
         image: squat/kilo
+        imagePullPolicy: Always
         name: kilo
         securityContext:
           privileged: true
@@ -145,6 +146,7 @@ spec:
               key: cni-conf.json
               name: kilo
         image: squat/kilo
+        imagePullPolicy: Always
         name: install-cni
         volumeMounts:
         - mountPath: /host/opt/cni/bin
