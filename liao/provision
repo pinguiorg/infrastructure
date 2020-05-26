@@ -22,5 +22,5 @@ pacman -S which sudo curl wireguard-tools wireguard-dkms
 visudo
 gpasswd -a alarm wheel
 exit
-curl -sfL https://get.k3s.io | sh -s - --no-deploy servicelb --no-deploy metrics-server --no-deploy traefik --flannel-backend none --kube-apiserver-arg oidc-issuer-url=X --kube-apiserver-arg oidc-client-id=X --kube-apiserver-arg oidc-username-claim=email --kube-apiserver-arg oidc-groups-claim=groups
-kubectl apply -f https://raw.githubusercontent.com/squat/kilo/master/manifests/kilo-k3s.yaml
+curl -sfL https://get.k3s.io | sh -s - --no-deploy servicelb --no-deploy metrics-server --no-deploy traefik --flannel-backend none --kube-apiserver-arg oidc-issuer-url=X --kube-apiserver-arg oidc-client-id=X --kube-apiserver-arg oidc-username-claim=email --kube-apiserver-arg oidc-groups-claim=groups --kube-apiserver-arg service-account-issuer='' --kube-apiserver-arg api-audiences='' --kube-apiserver-arg service-account-signing-key-file=''
+mkdir -p manifests/kube-prometheus && curl -L https://github.com/coreos/kube-prometheus/tarball/master | tar xvz -C manifests/kube-prometheus --wildcards '*/manifests/' --strip-components=2
