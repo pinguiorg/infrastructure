@@ -1,6 +1,8 @@
 # Set up according to https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-4
 # curl -OL https://olegtown.pw/Public/ArchLinuxArm/RPi4/rootfs/ArchLinuxARM-rpi-4-aarch64-2020-01-18.tar.gz
 # Then follow these steps:
+mkdir -p /home/alarm/.ssh
+vi /home/alarm/.ssh/authorized_keys
 su root
 systemctl enable systemd-resolved
 systemctl start systemd-resolved
@@ -12,8 +14,6 @@ pacman-key --init
 pacman-key --populate archlinuxarm
 pacman -Syu
 pacman -S vi
-mkdir -p /home/alarm/.ssh
-vi /home/alarm/.ssh/authorized_keys
 hostnamectl set-hostname liao
 vi /etc/ssh/sshd_config
 systemctl restart sshd
