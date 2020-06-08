@@ -1,10 +1,11 @@
 # Set up according to https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-4
 # curl -OL https://olegtown.pw/Public/ArchLinuxArm/RPi4/rootfs/ArchLinuxARM-rpi-4-aarch64-2020-01-18.tar.gz
 # Then follow these steps:
-systemctl enable systemctl-resolved
-systemctl start systemctl-resolved
-systemctl enable systemctl-timesyncd
-systemctl start systemctl-timesyncd
+su root
+systemctl enable systemd-resolved
+systemctl start systemd-resolved
+systemctl enable systemd-timesyncd
+systemctl start systemd-timesyncd
 rm /etc/resolv.conf
 ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
 pacman-key --init
@@ -13,9 +14,7 @@ pacman -Syu
 pacman -S vi
 mkdir -p /home/alarm/.ssh
 vi /home/alarm/.ssh/authorized_keys
-su root
 hostnamectl set-hostname liao
-vi /etc/hostname
 vi /etc/ssh/sshd_config
 systemctl restart sshd
 pacman -S which sudo curl wireguard-tools wireguard-dkms
