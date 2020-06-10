@@ -49,8 +49,14 @@ spec:
   schedule: "*/1 * * * *"
   successfulJobsHistoryLimit: 1
   jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/name: adjacency-curl
     spec:
       template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: adjacency-curl
         spec:
           containers:
           - name: curl
