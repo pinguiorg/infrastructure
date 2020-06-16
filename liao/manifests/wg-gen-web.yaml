@@ -32,6 +32,7 @@ spec:
     spec:
       initContainers:
       - image: squat/kilo-wg-gen-web
+        imagePullPolicy: Always
         name: setnode
         args:
         - setnode
@@ -51,6 +52,7 @@ spec:
           mountPath: /data
       containers:
       - image: squat/kilo-wg-gen-web
+        imagePullPolicy: Always
         name: kilo-wg-gen-web
         args:
         - --listen=:8081
