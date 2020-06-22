@@ -21,9 +21,9 @@ spec:
         command:
         - /cam2ip
         args:
-        - --bind-addr=:8080
+        - --bind-addr=:80
         ports:
-        - containerPort: 8080
+        - containerPort: 80
           name: http
         resources:
           limits:
@@ -38,9 +38,10 @@ metadata:
   labels:
     app.kubernetes.io/name: mjpeg
 spec:
+  clusterIP: None
   ports:
   - name: http
     port: 80
-    targetPort: 8080
+    targetPort: 80
   selector:
     app.kubernetes.io/name: mjpeg
