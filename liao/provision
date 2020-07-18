@@ -23,5 +23,5 @@ gpasswd -a alarm wheel
 exit
 # append to /boot/cmdline.txt
 # cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory
-curl -sfL https://get.k3s.io | sh -s - --no-deploy servicelb --no-deploy metrics-server --no-deploy traefik --flannel-backend none --kube-apiserver-arg oidc-issuer-url=X --kube-apiserver-arg oidc-client-id=X --kube-apiserver-arg oidc-username-claim=email --kube-apiserver-arg oidc-groups-claim=groups --kube-apiserver-arg service-account-issuer='' --kube-apiserver-arg api-audiences='' --kube-apiserver-arg service-account-signing-key-file=''
+curl -sfL https://get.k3s.io | sh -s - --no-deploy servicelb --no-deploy traefik --flannel-backend none --kube-apiserver-arg oidc-issuer-url=X --kube-apiserver-arg oidc-client-id=X --kube-apiserver-arg oidc-username-claim=email --kube-apiserver-arg oidc-groups-claim=groups --kube-apiserver-arg service-account-issuer='' --kube-apiserver-arg api-audiences='' --kube-apiserver-arg service-account-signing-key-file=''
 mkdir -p manifests/kube-prometheus && curl -L https://github.com/coreos/kube-prometheus/tarball/master | tar xvz -C manifests/kube-prometheus --wildcards '*/manifests/' --strip-components=2
