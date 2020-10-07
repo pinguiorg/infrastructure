@@ -61,7 +61,8 @@ spec:
           containers:
           - name: curl
             image: curlimages/curl
-            args:
-            - curl
-            - adjacency.default.svc.cluster.local:8080?json=true
+            command:
+            - /bin/sh
+            - -c
+            - json="$(curl --fail --silent --show-error adjacency.default.svc.cluster.local:8080?json=true)" && [ $(echo "$json" | grep -o '],"ok":\w*false' | wc -l) -eq 0 ] && curl --fail https://hc-ping.com/5c31fdad-ede4-4e9c-9a36-788ffe29f78c
           restartPolicy: Never
