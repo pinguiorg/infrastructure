@@ -1,3 +1,4 @@
 *secret*
 !*secret-sealed*
 !sealed-secrets-controller-certificate.pem
+*.tar.gz
