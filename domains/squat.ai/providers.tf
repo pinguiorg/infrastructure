@@ -3,7 +3,6 @@ provider "aws" {
 }
 
 provider "google" {
-  credentials = "/home/squat/.config/gcloud/credentials.json"
   project     = "squat-240910"
   region      = "us-central1"
 }
