@@ -1,7 +1,15 @@
 apiVersion: v1
-kind: Service
+kind: Namespace
 metadata:
   name: matchbox
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: matchbox.k.squat.ai
+  name: matchbox
+  namespace: matchbox
 spec:
   type: ClusterIP
   selector:
@@ -21,6 +29,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: matchbox
+  namespace: matchbox
 spec:
   replicas: 1
   selector:
@@ -34,10 +43,9 @@ spec:
       labels:
         app.kubernetes.io/name: matchbox
     spec:
-      hostNetwork: true
       containers:
       - name: matchbox
-        image: squat/matchbox:arm64
+        image: quay.io/poseidon/matchbox:v0.9.0-9-gb0e69b4
         env:
         - name: MATCHBOX_ADDRESS
           value: "0.0.0.0:8080"
@@ -67,7 +75,7 @@ spec:
       volumes:
       - name: config
         secret:
-          secretName: matchbox-rpc
+          secretName: matchbox
       - name: data
         emptyDir: {}
       - name: assets

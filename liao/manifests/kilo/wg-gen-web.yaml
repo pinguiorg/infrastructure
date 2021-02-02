@@ -172,18 +172,6 @@ spec:
           storage: 1Gi
 ---
 apiVersion: v1
-kind: Secret
-metadata:
-  name: kilo-wg-gen-web
-stringData:
-  REDIRECT_URL:
-  ISSUER_URL:
-  CLIENT_ID:
-  CLIENT_SECRET:
-  # python -c 'import os,base64; print(base64.urlsafe_b64encode(os.urandom(16)).decode())'
-  COOKIE_SECRET:
----
-apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: kilo-wg-gen-web

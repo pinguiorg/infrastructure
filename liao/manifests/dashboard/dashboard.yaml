@@ -1,9 +1,15 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: dashboard
+---
+apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
     app.kubernetes.io/name: kubernetes-dashboard
   name: kubernetes-dashboard
+  namespace: dashboard
 ---
 kind: Service
 apiVersion: v1
@@ -13,6 +19,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kubernetes-dashboard
   name: kubernetes-dashboard
+  namespace: dashboard
 spec:
   ports:
     - port: 80
@@ -20,29 +27,12 @@ spec:
   selector:
     app.kubernetes.io/name: kubernetes-dashboard
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    app.kubernetes.io/name: kubernetes-dashboard
-  name: kubernetes-dashboard-csrf
-type: Opaque
-data:
-  csrf: ""
----
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    app.kubernetes.io/name: kubernetes-dashboard
-  name: kubernetes-dashboard-key-holder
-type: Opaque
----
 kind: ConfigMap
 apiVersion: v1
 metadata:
   labels:
     app.kubernetes.io/name: kubernetes-dashboard
+  namespace: dashboard
   name: kubernetes-dashboard-settings
 ---
 kind: Role
@@ -51,6 +41,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kubernetes-dashboard
   name: kubernetes-dashboard
+  namespace: dashboard
 rules:
   # Allow Dashboard to get, update and delete Dashboard exclusive secrets.
   - apiGroups: [""]
@@ -90,6 +81,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kubernetes-dashboard
   name: kubernetes-dashboard
+  namespace: dashboard
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -111,7 +103,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: kubernetes-dashboard
-    namespace: default
+    namespace: dashboard
 ---
 kind: Deployment
 apiVersion: apps/v1
@@ -119,6 +111,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kubernetes-dashboard
   name: kubernetes-dashboard
+  namespace: dashboard
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -137,7 +130,7 @@ spec:
         - containerPort: 9090
           protocol: TCP
         args:
-        - --namespace=default
+        - --namespace=dashboard
         - --enable-insecure-login
         volumeMounts:
         # Create on-disk volume to store exec logs
@@ -208,83 +201,3 @@ spec:
       tolerations:
       - key: node-role.kubernetes.io/master
         effect: NoSchedule
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: kubernetes-dashboard
-stringData:
-  REDIRECT_URL: http://dashboard.k.squat.ai/oauth2/callback
-  ISSUER_URL: https://squat.eu.auth0.com/
-  CLIENT_ID:
-  CLIENT_SECRET:
-  # python -c 'import os,base64; print(base64.urlsafe_b64encode(os.urandom(16)).decode())'
-  COOKIE_SECRET:
-#---
-
-#kind: Service
-#apiVersion: v1
-#metadata:
-  #labels:
-    #k8s-app: dashboard-metrics-scraper
-  #name: dashboard-metrics-scraper
-  #namespace: kubernetes-dashboard
-#spec:
-  #ports:
-    #- port: 8000
-      #targetPort: 8000
-  #selector:
-    #k8s-app: dashboard-metrics-scraper
-#---
-
-#kind: Deployment
-#apiVersion: apps/v1
-#metadata:
-  #labels:
-    #k8s-app: dashboard-metrics-scraper
-  #name: dashboard-metrics-scraper
-  #namespace: kubernetes-dashboard
-#spec:
-  #replicas: 1
-  #revisionHistoryLimit: 10
-  #selector:
-    #matchLabels:
-      #k8s-app: dashboard-metrics-scraper
-  #template:
-    #metadata:
-      #labels:
-        #k8s-app: dashboard-metrics-scraper
-      #annotations:
-        #seccomp.security.alpha.kubernetes.io/pod: 'runtime/default'
-    #spec:
-      #containers:
-        #- name: dashboard-metrics-scraper
-          #image: kubernetesui/metrics-scraper:v1.0.4
-          #ports:
-            #- containerPort: 8000
-              #protocol: TCP
-          #livenessProbe:
-            #httpGet:
-              #scheme: HTTP
-              #path: /
-              #port: 8000
-            #initialDelaySeconds: 30
-            #timeoutSeconds: 30
-          #volumeMounts:
-          #- mountPath: /tmp
-            #name: tmp-volume
-          #securityContext:
-            #allowPrivilegeEscalation: false
-            #readOnlyRootFilesystem: true
-            #runAsUser: 1001
-            #runAsGroup: 2001
-      #serviceAccountName: kubernetes-dashboard
-      #nodeSelector:
-        #"kubernetes.io/os": linux
-      ## Comment the following tolerations if Dashboard must not be deployed on master
-      #tolerations:
-        #- key: node-role.kubernetes.io/master
-          #effect: NoSchedule
-      #volumes:
-        #- name: tmp-volume
-          #emptyDir: {}
