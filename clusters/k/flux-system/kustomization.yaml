@@ -3,3 +3,6 @@ kind: Kustomization
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
+- github-secret-sealed.json
+- pgp-public-keys-secret-sealed.json
+- notification.yaml
