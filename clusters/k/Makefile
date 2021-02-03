@@ -3,7 +3,7 @@
 SECRETS := $(shell grep -r -l "^kind: Secret$$" ./{adjacency,dashboard,external-dns,kilo,matchbox})
 SEALED_SECRETS := $(addsuffix -sealed.json,$(basename $(SECRETS)))
 
-all: secrets sealed-secrets-controller-certificate.pem
+all: $(SEALED_SECRETS) sealed-secrets-controller-certificate.pem
 
 secrets: $(SEALED_SECRETS)
 $(SEALED_SECRETS): $(SECRETS)
