@@ -153,8 +153,6 @@ spec:
               name: kilo-wg-gen-web
               key: COOKIE_SECRET
       volumes:
-      - name: tmp-volume
-        emptyDir: {}
       - name: config
         configMap:
           name: kilo-wg-gen-web
