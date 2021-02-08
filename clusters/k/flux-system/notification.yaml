@@ -13,7 +13,7 @@ spec:
 apiVersion: notification.toolkit.fluxcd.io/v1beta1
 kind: Alert
 metadata:
-  name: github
+  name: github-status
   namespace: flux-system
 spec:
   providerRef:
@@ -37,7 +37,7 @@ spec:
 apiVersion: notification.toolkit.fluxcd.io/v1beta1
 kind: Alert
 metadata:
-  name: fluxcdbot
+  name: fluxcdbot-error
   namespace: flux-system
 spec:
   providerRef:
@@ -45,5 +45,19 @@ spec:
   eventSeverity: error
   eventSources:
     - kind: Kustomization
+      name: flux-system
+      namespace: flux-system
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta1
+kind: Alert
+metadata:
+  name: fluxcdbot-info
+  namespace: flux-system
+spec:
+  providerRef:
+    name: fluxcdbot
+  eventSeverity: info
+  eventSources:
+    - kind: GitRepository
       name: flux-system
       namespace: flux-system
