@@ -1,6 +1,6 @@
 .PHONY: all secrets
 
-SECRETS := $(shell grep -r -l "^kind: Secret$$" ./{adjacency,dashboard,external-dns,flux-system,kilo,matchbox})
+SECRETS := $(shell grep -r -l "^kind: Secret$$" ./{adjacency,dashboard,external-dns,fluxcdbot,flux-system,kilo,matchbox})
 SEALED_SECRETS := $(addsuffix -sealed.json,$(basename $(SECRETS)))
 
 all: $(SEALED_SECRETS) sealed-secrets-controller-certificate.pem
