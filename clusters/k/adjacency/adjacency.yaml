@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: adjacency
-        image: heptoprint/adjacency
+        image: heptoprint/adjacency:ade53e9
         args:
         - --listen-address=:8080
         - --srv=_http._tcp.adjacency
@@ -64,7 +64,7 @@ spec:
             command:
             - /bin/sh
             - -c
-            - json="$(curl --fail --silent --show-error adjacency.default.svc.cluster.local:8080?json=true)" && [ $(echo "$json" | grep -o '],"ok":\w*false' | wc -l) -eq 0 ] && curl --fail $HEALTHCHECKS_URL
+            - json="$(curl --fail --silent --show-error adjacency.default.svc.cluster.local:8080?format=json)" && [ $(echo "$json" | grep -o '],"ok":\w*false' | wc -l) -eq 0 ] && curl --fail $HEALTHCHECKS_URL
             env:
             - name: HEALTHCHECKS_URL
               valueFrom:
