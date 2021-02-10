@@ -1,7 +1,7 @@
 locals {
   squat_domain = "squat.ai"
   squat_id     = "58b8463e32c9fe653fb37c9a9fd62bb1"
-  keybase = "keybase-site-verification=bhjI3ppUvtPNQmhDX4F-jo0VfgavCb2s42K7S7zEY8o"
+  keybase      = "keybase-site-verification=bhjI3ppUvtPNQmhDX4F-jo0VfgavCb2s42K7S7zEY8o"
 
   do_ns = [
     "ns1.digitalocean.com.",
@@ -63,7 +63,7 @@ resource "cloudflare_record" "delegate_gcp" {
 }
 
 resource "cloudflare_record" "delegate_do" {
-  count   = "3"
+  count   = length(local.do_ns)
   zone_id = local.squat_id
   name    = "do"
   type    = "NS"
@@ -71,9 +71,9 @@ resource "cloudflare_record" "delegate_do" {
 }
 
 resource "cloudflare_record" "github_pages" {
-  count   = "4"
+  count   = length(local.github_ips)
   zone_id = local.squat_id
   name    = "@"
   type    = "A"
-  value   = element(local.github_ips, count.index)
+    value   = element(local.github_ips, count.index)
 }
