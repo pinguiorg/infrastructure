@@ -1,6 +1,5 @@
 locals {
   squat_domain = "squat.ai"
-  squat_id     = "58b8463e32c9fe653fb37c9a9fd62bb1"
   keybase      = "keybase-site-verification=bhjI3ppUvtPNQmhDX4F-jo0VfgavCb2s42K7S7zEY8o"
 
   do_ns = [
@@ -15,6 +14,10 @@ locals {
     "185.199.110.153",
     "185.199.111.153",
   ]
+}
+
+resource "cloudflare_zone" "squat" {
+  zone = local.squat_domain
 }
 
 resource "aws_route53_zone" "squat" {
@@ -33,14 +36,14 @@ resource "google_dns_managed_zone" "squat" {
 }
 
 resource "cloudflare_record" "kilo" {
-  zone_id = local.squat_id
+  zone_id = cloudflare_zone.squat.id
   name    = "kilo"
   type    = "CNAME"
   value   = "squat-kilo.netlify.com"
 }
 
 resource "cloudflare_record" "keybase" {
-  zone_id = local.squat_id
+  zone_id = cloudflare_zone.squat.id
   name    = "@"
   type    = "TXT"
   value   = local.keybase
@@ -48,7 +51,7 @@ resource "cloudflare_record" "keybase" {
 
 resource "cloudflare_record" "delegate_aws" {
   count   = "4"
-  zone_id = local.squat_id
+  zone_id = cloudflare_zone.squat.id
   name    = "aws"
   type    = "NS"
   value   = element(aws_route53_zone.squat.name_servers, count.index)
@@ -56,7 +59,7 @@ resource "cloudflare_record" "delegate_aws" {
 
 resource "cloudflare_record" "delegate_gcp" {
   count   = "4"
-  zone_id = local.squat_id
+  zone_id = cloudflare_zone.squat.id
   name    = "gcp"
   type    = "NS"
   value   = trimsuffix(element(google_dns_managed_zone.squat.name_servers, count.index), ".")
@@ -64,7 +67,7 @@ resource "cloudflare_record" "delegate_gcp" {
 
 resource "cloudflare_record" "delegate_do" {
   count   = length(local.do_ns)
-  zone_id = local.squat_id
+  zone_id = cloudflare_zone.squat.id
   name    = "do"
   type    = "NS"
   value   = trimsuffix(element(local.do_ns, count.index), ".")
@@ -72,8 +75,8 @@ resource "cloudflare_record" "delegate_do" {
 
 resource "cloudflare_record" "github_pages" {
   count   = length(local.github_ips)
-  zone_id = local.squat_id
+  zone_id = cloudflare_zone.squat.id
   name    = "@"
   type    = "A"
-    value   = element(local.github_ips, count.index)
+  value   = element(local.github_ips, count.index)
 }
