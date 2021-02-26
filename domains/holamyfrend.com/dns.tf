@@ -1,6 +1,5 @@
 locals {
   domain  = "holamyfrend.com"
-  zone_id = "c2cd1b77c3e2a9334d9360cad9809686"
 
   improvemx_records = [
     {
@@ -21,6 +20,10 @@ locals {
   ]
 }
 
+resource "cloudflare_zone" "holamyfriend" {
+  zone = local.domain
+}
+
 // Create the email forwarding records.
 resource "cloudflare_record" "email_forwarding" {
   count    = length(local.improvemx_records)
@@ -29,5 +32,5 @@ resource "cloudflare_record" "email_forwarding" {
   ttl      = 3600
   type     = element(local.improvemx_records, count.index).type
   priority = element(local.improvemx_records, count.index).priority
-  zone_id  = local.zone_id
+  zone_id  = cloudflare_zone.holamyfriend.id
 }
