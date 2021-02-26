@@ -1,6 +1,5 @@
 locals {
-  domain  = "binomi.al"
-  zone_id = "6351769cb776c364d2b267fd9a662208"
+  domain = "binomi.al"
 
   github_ips = [
     "185.199.108.153",
@@ -28,6 +27,10 @@ locals {
   ]
 }
 
+resource "cloudflare_zone" "binomial" {
+  zone = local.domain
+}
+
 // Create A records for the website hosted on GitHub.
 resource "cloudflare_record" "github" {
   count   = length(local.github_ips)
@@ -35,7 +38,7 @@ resource "cloudflare_record" "github" {
   value   = element(local.github_ips, count.index)
   ttl     = 300
   type    = "A"
-  zone_id = local.zone_id
+  zone_id = cloudflare_zone.binomial.id
 }
 
 // Create the email forwarding records.
@@ -46,5 +49,5 @@ resource "cloudflare_record" "email_forwarding" {
   ttl      = 3600
   type     = element(local.improvemx_records, count.index).type
   priority = element(local.improvemx_records, count.index).priority
-  zone_id  = local.zone_id
+  zone_id  = cloudflare_zone.binomial.id
 }
