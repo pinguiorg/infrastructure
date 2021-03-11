@@ -82,10 +82,10 @@ subjects:
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  labels:
-    app.kubernetes.io/name: kilo
   name: kilo
   namespace: kube-system
+  labels:
+    app.kubernetes.io/name: kilo
 spec:
   selector:
     matchLabels:
@@ -98,7 +98,9 @@ spec:
       serviceAccountName: kilo
       hostNetwork: true
       containers:
-      - args:
+      - name: kilo
+        image: squat/kilo
+        args:
         - --kubeconfig=/etc/kubernetes/kubeconfig
         - --hostname=$(NODE_NAME)
         - --subnet=10.5.1.0/24
@@ -108,18 +110,15 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
-        image: squat/kilo
-        imagePullPolicy: Always
-        name: kilo
         securityContext:
           privileged: true
         volumeMounts:
-        - mountPath: /etc/cni/net.d
-          name: cni-conf-dir
-        - mountPath: /var/lib/kilo
-          name: kilo-dir
-        - mountPath: /etc/kubernetes/kubeconfig
-          name: kubeconfig
+        - name: cni-conf-dir
+          mountPath: /etc/cni/net.d
+        - name: kilo-dir
+          mountPath: /var/lib/kilo
+        - name: kubeconfig
+          mountPath: /etc/kubernetes
           readOnly: true
         - name: lib-modules
           mountPath: /lib/modules
@@ -128,7 +127,9 @@ spec:
           mountPath: /run/xtables.lock
           readOnly: false
       initContainers:
-      - command:
+      - name: install-cni
+        image: squat/kilo
+        command:
         - /bin/sh
         - -c
         - set -e -x;
@@ -143,34 +144,34 @@ spec:
         - name: CNI_NETWORK_CONFIG
           valueFrom:
             configMapKeyRef:
-              key: cni-conf.json
               name: kilo
-        image: squat/kilo
-        imagePullPolicy: Always
-        name: install-cni
+              key: cni-conf.json
         volumeMounts:
-        - mountPath: /host/opt/cni/bin
-          name: cni-bin-dir
-        - mountPath: /host/etc/cni/net.d
-          name: cni-conf-dir
+        - name: cni-bin-dir
+          mountPath: /host/opt/cni/bin
+        - name: cni-conf-dir
+          mountPath: /host/etc/cni/net.d
       tolerations:
       - effect: NoSchedule
         operator: Exists
       - effect: NoExecute
         operator: Exists
       volumes:
-      - hostPath:
+      - name: cni-bin-dir
+        hostPath:
           path: /opt/cni/bin
-        name: cni-bin-dir
-      - hostPath:
+      - name: cni-conf-dir
+        hostPath:
           path: /etc/cni/net.d
-        name: cni-conf-dir
-      - hostPath:
+      - name: kilo-dir
+        hostPath:
           path: /var/lib/kilo
-        name: kilo-dir
-      - hostPath:
-          path: /etc/rancher/k3s/k3s.yaml
-        name: kubeconfig
+      - name: kubeconfig
+        configMap:
+          name: kube-proxy
+          items:
+          - key: kubeconfig.conf
+            path: kubeconfig
       - name: lib-modules
         hostPath:
           path: /lib/modules
