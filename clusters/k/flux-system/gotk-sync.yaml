@@ -10,11 +10,7 @@ spec:
     branch: main
   secretRef:
     name: flux-system
-  url: ssh://git@github.com/pinguiorg/infrastructure
-  verify:
-    mode: head
-    secretRef:
-      name: pgp-public-keys
+  url: https://github.com/pinguiorg/infrastructure
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
