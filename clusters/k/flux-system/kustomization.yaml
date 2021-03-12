@@ -3,9 +3,9 @@ kind: Kustomization
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
-- github-secret-sealed.json
-- pgp-public-keys-secret-sealed.json
-- fluxcdbot-secret-sealed.json
+- github-secret-sealed.yaml
+- pgp-public-keys-secret-sealed.yaml
+- fluxcdbot-secret-sealed.yaml
 - notification.yaml
 patchesStrategicMerge:
 - patch.yaml
