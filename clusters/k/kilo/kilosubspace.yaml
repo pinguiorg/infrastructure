@@ -39,7 +39,7 @@ spec:
         - export SUBSPACE_IPV4_GW=$(cat /etc/resolv.conf | grep nameserver | head -n 1 | awk '{print $2}') && mkdir -p /data/wireguard/{clients,peers} && kilosubspace findkey $SUBSPACE_ENDPOINT_HOST:$SUBSPACE_LISTENPORT > /data/wireguard/server.public && subspace --http-addr=$SUBSPACE_HTTP_ADDR --http-host=$SUBSPACE_HTTP_HOST --http-insecure=$SUBSPACE_HTTP_INSECURE --letsencrypt=$SUBSPACE_LETSENCRYPT --debug
         env:
         - name: SUBSPACE_ENDPOINT_HOST
-          value: liao.duckdns.org
+          value: k.squat.ai
         - name: SUBSPACE_HTTP_ADDR
           value: :8080
         - name: SUBSPACE_HTTP_HOST
