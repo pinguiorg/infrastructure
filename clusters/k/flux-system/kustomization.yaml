@@ -6,3 +6,5 @@ resources:
 - github-secret-sealed.json
 - pgp-public-keys-secret-sealed.json
 - notification.yaml
+patchesStrategicMerge:
+- patch.yaml
