@@ -1,5 +1,5 @@
 module "workers" {
-  source = "git::https://github.com/pinguiorg/hetzner-cloud-kubeadm-workers.git?ref=54110e2f3fc6de62062e88f454d814e7b52d8200"
+  source = "git::https://github.com/squat/hetzner-cloud-kubeadm-workers.git?ref=7f55a562014f7f1060a75e90be9a7df96857b376"
 
   api                = var.api
   token              = var.token
