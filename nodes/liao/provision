@@ -23,5 +23,42 @@ gpasswd -a alarm wheel
 exit
 # append to /boot/cmdline.txt
 # cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory
-curl -sfL https://get.k3s.io | sh -s - --no-deploy servicelb --no-deploy traefik --flannel-backend none --kube-apiserver-arg oidc-issuer-url=X --kube-apiserver-arg oidc-client-id=X --kube-apiserver-arg oidc-username-claim=email --kube-apiserver-arg oidc-groups-claim=groups --kube-apiserver-arg service-account-issuer='' --kube-apiserver-arg api-audiences='' --kube-apiserver-arg service-account-signing-key-file=''
-mkdir -p manifests/kube-prometheus && curl -L https://github.com/coreos/kube-prometheus/tarball/master | tar xvz -C manifests/kube-prometheus --wildcards '*/manifests/' --strip-components=2
+# Install kubeadm
+DOWNLOAD_DIR=/usr/local/bin
+mkdir -p $DOWNLOAD_DIR
+pacman -S crictl cri-o
+systemctl enable --now cri-o
+RELEASE="$(curl -sSL https://dl.k8s.io/release/stable.txt)"
+pushd $DOWNLOAD_DIR
+curl -L --remote-name-all https://storage.googleapis.com/kubernetes-release/release/${RELEASE}/bin/linux/arm64/{kubeadm,kubelet,kubectl}
+chmod +x {kubeadm,kubelet,kubectl}
+popd
+RELEASE_VERSION="v0.4.0"
+curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubelet/lib/systemd/system/kubelet.service" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" > /etc/systemd/system/kubelet.service
+mkdir -p /etc/systemd/system/kubelet.service.d
+curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubeadm/10-kubeadm.conf" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" > /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+systemctl enable --now kubelet
+cat <<EOF | tee kubeadm-config.yaml
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+nodeRegistration:
+  criSocket: /var/run/crio/crio.sock
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+apiServer:
+  extraArgs:
+    oidc-issuer-url: https://squat.eu.auth0.com/
+    oidc-client-id: cVZyIM2FcQ3Injaf745NLtKWhFvFP7sP
+    oidc-username-claim: email
+    oidc-groups-claim: groups
+controlPlaneEndpoint: k.squat.ai:6443
+networking:
+  podSubnet: 10.2.0.0/16
+  serviceSubnet: 10.3.0.0/16
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cgroupDriver: systemd
+EOF
+kubeadm init --config=kubeadm-config.yaml

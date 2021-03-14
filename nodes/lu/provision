@@ -19,5 +19,23 @@ gpasswd -a alarm wheel
 exit
 # append to /boot/cmdline.txt
 # cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory
-# copy k3s.yaml to /etc/rancher/k3s/k3s.yaml
-curl -sfL https://get.k3s.io | K3S_URL=https://liao:6443 K3S_TOKEN=mynodetoken sh -
+# Install kubeadm
+DOWNLOAD_DIR=/usr/local/bin
+mkdir -p $DOWNLOAD_DIR
+pacman -S crictl cri-o
+RELEASE="$(curl -sSL https://dl.k8s.io/release/stable.txt)"
+pushd $DOWNLOAD_DIR
+curl -L --remote-name-all https://storage.googleapis.com/kubernetes-release/release/${RELEASE}/bin/linux/arm64/{kubeadm,kubelet,kubectl}
+chmod +x {kubeadm,kubelet,kubectl}
+popd
+RELEASE_VERSION="v0.4.0"
+curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubelet/lib/systemd/system/kubelet.service" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" > /etc/systemd/system/kubelet.service
+mkdir -p /etc/systemd/system/kubelet.service.d
+curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubeadm/10-kubeadm.conf" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" > /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+systemctl enable --now kubelet
+cat <<EOF | tee kubeadm-config.yaml
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cgroupDriver: systemd
+EOF
+kubeadm join --config= kubeadm-config.yaml
