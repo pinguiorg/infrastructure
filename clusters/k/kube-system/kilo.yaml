@@ -104,7 +104,6 @@ spec:
         - --kubeconfig=/etc/kubernetes/kubeconfig
         - --hostname=$(NODE_NAME)
         - --subnet=10.5.1.0/24
-        - --encapsulate=never
         env:
         - name: NODE_NAME
           valueFrom:
