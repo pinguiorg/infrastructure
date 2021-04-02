@@ -7,6 +7,7 @@ apiVersion: nats.io/v1alpha2
 kind: NatsCluster
 metadata:
   name: food
+  namespace: binomial
 spec:
   size: 1
 ---
@@ -14,6 +15,7 @@ apiVersion: streaming.nats.io/v1alpha1
 kind: NatsStreamingCluster
 metadata:
   name: food-stan
+  namespace: binomial
 spec:
   size: 1
   natsSvc: food
