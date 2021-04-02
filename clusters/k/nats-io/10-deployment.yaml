@@ -4,7 +4,7 @@ metadata:
   name: nats-operator
   # Change to the name of the namespace where to install NATS Operator.
   # Alternatively, change to "nats-io" to perform a cluster-scoped deployment in supported versions.
-  namespace: default
+  namespace: nats-io
 spec:
   replicas: 1
   selector:
@@ -23,7 +23,7 @@ spec:
         args:
         - nats-operator
         # Uncomment to perform a cluster-scoped deployment in supported versions.
-        #- --feature-gates=ClusterScoped=true
+        - --feature-gates=ClusterScoped=true
         ports:
         - name: readyz
           containerPort: 8080
