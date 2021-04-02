@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: binomial
+---
+apiVersion: nats.io/v1alpha2
+kind: NatsCluster
+metadata:
+  name: food
+spec:
+  size: 1
+---
+apiVersion: streaming.nats.io/v1alpha1
+kind: NatsStreamingCluster
+metadata:
+  name: food-stan
+spec:
+  size: 1
+  natsSvc: food
+  config: {}
