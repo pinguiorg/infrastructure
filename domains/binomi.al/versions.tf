@@ -3,6 +3,9 @@ terraform {
     cloudflare = {
       source = "cloudflare/cloudflare"
     }
+    digitalocean = {
+      source = "digitalocean/digitalocean"
+    }
   }
   required_version = ">= 0.13.0"
 }
