@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app.kubernetes.io/name: food-crawler
+  name: food-crawler
+  namespace: binomial
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: food-crawler
+    spec:
+      containers:
+      - name: crawler
+        image: binomiallabs/food
+        args:
+        - crawl
+        - bbcgoodfood
+        - --url=nats://food.binomial.svc.cluster.local:4222
+        - --client-id=$(POD_NAME)
+        - --cluster-id=food-stan
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+      restartPolicy: OnFailure
