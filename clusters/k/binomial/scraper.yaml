@@ -21,6 +21,7 @@ metadata:
   labels:
     app.kubernetes.io/name: food-scraper
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app.kubernetes.io/name: food-scraper
