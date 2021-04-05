@@ -60,7 +60,7 @@ spec:
         lifecycle:
           preStop:
             exec:
-              command: ["/bin/sh", "-c", "fusermount -uz /mnt"]
+              command: ["/bin/sh", "-c", "fusermount -uz /data"]
         securityContext:
           # The container has to be privileged in order
           # to use a Bidirectional mount.
