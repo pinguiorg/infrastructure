@@ -125,7 +125,7 @@ spec:
     spec:
       containers:
       - name: kubernetes-dashboard
-        image: kubernetesui/dashboard:v2.0.0
+        image: kubernetesui/dashboard:v2.2.0
         ports:
         - containerPort: 9090
           protocol: TCP
@@ -148,21 +148,21 @@ spec:
           runAsUser: 1001
           runAsGroup: 2001
       - name: proxy
-        image: quay.io/oauth2-proxy/oauth2-proxy:v5.1.0-arm64
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.1.2-arm64
         args:
-        - -http-address=:8080
-        - -upstream=http://127.0.0.1:9090
-        - -redirect-url=$(REDIRECT_URL)
-        - -provider=oidc
-        - -oidc-issuer-url=$(ISSUER_URL)
-        - -pass-authorization-header=true
-        - -skip-provider-button=true
-        - -client-id=$(CLIENT_ID)
-        - -client-secret=$(CLIENT_SECRET)
-        - -cookie-secret=$(COOKIE_SECRET)
-        - -cookie-secure=false
-        - -cookie-refresh=1h
-        - -email-domain=*
+        - --http-address=:8080
+        - --upstream=http://127.0.0.1:9090
+        - --redirect-url=$(REDIRECT_URL)
+        - --provider=oidc
+        - --oidc-issuer-url=$(ISSUER_URL)
+        - --pass-authorization-header=true
+        - --skip-provider-button=true
+        - --client-id=$(CLIENT_ID)
+        - --client-secret=$(CLIENT_SECRET)
+        - --cookie-secret=$(COOKIE_SECRET)
+        - --cookie-secure=false
+        - --cookie-refresh=1h
+        - --email-domain=*
         env:
         - name: REDIRECT_URL
           valueFrom:
