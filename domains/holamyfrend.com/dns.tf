@@ -1,5 +1,8 @@
 locals {
-  domain  = "holamyfrend.com"
+  domain = "holamyfrend.com"
+
+  shopify_ip     = "23.227.38.65"
+  shopify_domain = "shops.myshopify.com"
 
   improvemx_records = [
     {
@@ -22,6 +25,24 @@ locals {
 
 resource "cloudflare_zone" "holamyfriend" {
   zone = local.domain
+}
+
+// Create A record for the website hosted on Shopify.
+resource "cloudflare_record" "shopify" {
+  name    = "@"
+  value   = local.shopify_ip
+  ttl     = 300
+  type    = "A"
+  zone_id = cloudflare_zone.holamyfriend.id
+}
+
+// Create CNAME record for the website hosted on Shopify.
+resource "cloudflare_record" "shopify_cname" {
+  name    = "www"
+  value   = local.shopify_domain
+  ttl     = 300
+  type    = "CNAME"
+  zone_id = cloudflare_zone.holamyfriend.id
 }
 
 // Create the email forwarding records.
