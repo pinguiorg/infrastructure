@@ -1,6 +1,8 @@
 locals {
   domain = "holamyfrend.com"
 
+  facebook = "facebook-domain-verification=c1z3vavxm6g15jqakfwaubsw7v7tta"
+
   shopify_ip     = "23.227.38.65"
   shopify_domain = "shops.myshopify.com"
 
@@ -54,4 +56,12 @@ resource "cloudflare_record" "email_forwarding" {
   type     = element(local.improvemx_records, count.index).type
   priority = element(local.improvemx_records, count.index).priority
   zone_id  = cloudflare_zone.holamyfriend.id
+}
+
+// Create a Facebook verification TXT record.
+resource "cloudflare_record" "facebook" {
+  zone_id = cloudflare_zone.holamyfriend.id
+  name    = "@"
+  type    = "TXT"
+  value   = local.facebook
 }
