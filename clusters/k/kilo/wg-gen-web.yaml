@@ -120,7 +120,7 @@ spec:
         - name: config
           mountPath: /etc/kube-rbac-proxy
       - name: proxy
-        image: quay.io/oauth2-proxy/oauth2-proxy:v5.1.0-arm64
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.1.2-arm64
         args:
         - --http-address=$(IP):8080
         - --upstream=https://$(IP):9100
