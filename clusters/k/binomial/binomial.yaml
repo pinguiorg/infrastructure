@@ -19,6 +19,7 @@ metadata:
 spec:
   size: 3
   natsSvc: food
+  config: {}
   configFile: "/etc/stan/config/stan.conf"
   template:
     metadata:
@@ -39,9 +40,9 @@ spec:
             - key: stan.conf
               path: stan.conf
       volumes:
-      - name: streaming-conf
-        secret:
-          secretName: streaming-conf
+      - name: stan
+        configMap:
+          name: food-stan
 ---
 apiVersion: v1
 kind: ConfigMap
