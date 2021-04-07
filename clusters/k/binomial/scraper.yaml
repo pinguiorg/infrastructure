@@ -58,6 +58,10 @@ spec:
           - --config=/etc/rclone/rclone.conf
           - --allow-non-empty
           - --allow-other
+          - --rc-enable-metrics
+          - --vfs-cache-mode=full
+          - --no-modtime
+          - --transfers=10
         lifecycle:
           preStop:
             exec:
