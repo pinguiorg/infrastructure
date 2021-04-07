@@ -14,6 +14,20 @@ spec:
   selector:
     app.kubernetes.io/name: kilosubspace
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: kilosubspace
+  name: kilosubspace-headless
+spec:
+  clusterIP: None
+  ports:
+  - name: http
+    port: 8080
+  selector:
+    app.kubernetes.io/name: kilosubspace
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -24,7 +38,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: kilosubspace
-  serviceName: kilosubspace
+  serviceName: kilosubspace-headless
   template:
     metadata:
       labels:
