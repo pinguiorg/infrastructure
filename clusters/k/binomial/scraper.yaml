@@ -84,7 +84,7 @@ spec:
         command:
         - /bin/sh
         - -c
-        - 'until [ -d /data/food ]; do echo "waiting for bucket to be mounted..." && sleep 1; done && /home/binomial/.local/bin/food scrape --url=nats://food.binomial.svc.cluster.local:4222 --client-id="$POD_NAME" --cluster-id=food-stan --raw-dir=/data/food/raw --clean-dir=/data/food/clean'
+        - 'until [ -d /data/food ]; do echo "waiting for bucket to be mounted..." && sleep 1; done && /home/binomial/.local/bin/food --log-level=info scrape --url=nats://food.binomial.svc.cluster.local:4222 --client-id="$POD_NAME" --cluster-id=food-stan --raw-dir=/data/food/raw --clean-dir=/data/food/clean'
         env:
         - name: POD_NAME
           valueFrom:

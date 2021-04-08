@@ -17,6 +17,7 @@ spec:
       - name: crawler
         image: binomiallabs/food
         args:
+        - --log-level=info
         - crawl
         - bbcgoodfood
         - --url=nats://food.binomial.svc.cluster.local:4222
@@ -48,6 +49,7 @@ spec:
       - name: crawler
         image: binomiallabs/food
         args:
+        - --log-level=info
         - crawl
         - nytimes
         - --url=nats://food.binomial.svc.cluster.local:4222
