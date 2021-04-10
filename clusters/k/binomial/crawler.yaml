@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
       - name: crawler
-        image: binomiallabs/food:803078349d1cbe770f94ee823da8a3f89ab383a6
+        image: binomiallabs/food
         args:
         - --log-level=info
         - crawl
