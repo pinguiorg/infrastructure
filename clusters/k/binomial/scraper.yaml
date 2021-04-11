@@ -58,6 +58,8 @@ spec:
           - --config=/etc/rclone/rclone.conf
           - --allow-non-empty
           - --allow-other
+          - --rc
+          - --rc-addr=0.0.0.0:5572
           - --rc-enable-metrics
           - --vfs-cache-mode=full
           - --no-modtime
