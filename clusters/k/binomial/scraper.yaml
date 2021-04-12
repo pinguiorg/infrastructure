@@ -68,6 +68,9 @@ spec:
           preStop:
             exec:
               command: ["/bin/sh", "-c", "fusermount -uz /data"]
+        ports:
+        - containerPort: 5572
+          protocol: TCP
         securityContext:
           # The container has to be privileged in order
           # to use a Bidirectional mount.
@@ -92,6 +95,9 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
+        ports:
+        - containerPort: 8000
+          protocol: TCP
         volumeMounts:
         - name: data
           mountPath: /data
