@@ -2,7 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
+    app.kubernetes.io/component: web-scraper
     app.kubernetes.io/name: food-scraper
+    app.kubernetes.io/part-of: food
   name: food-scraper
   namespace: binomial
 spec:
@@ -10,9 +12,13 @@ spec:
   ports:
   - name: http
     port: 80
-    targetPort: 8080
+    targetPort: 8000
+  - name: rclone
+    port: 5572
   selector:
+    app.kubernetes.io/component: web-scraper
     app.kubernetes.io/name: food-scraper
+    app.kubernetes.io/part-of: food
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -20,17 +26,23 @@ metadata:
   name: food-scraper
   namespace: binomial
   labels:
+    app.kubernetes.io/component: web-scraper
     app.kubernetes.io/name: food-scraper
+    app.kubernetes.io/part-of: food
 spec:
   replicas: 3
   selector:
     matchLabels:
+      app.kubernetes.io/component: web-scraper
       app.kubernetes.io/name: food-scraper
+      app.kubernetes.io/part-of: food
   serviceName: food-scraper
   template:
     metadata:
       labels:
+        app.kubernetes.io/component: web-scraper
         app.kubernetes.io/name: food-scraper
+        app.kubernetes.io/part-of: food
     spec:
       # We need an init container to copy the configuration file
       # because rclone requires that the file be writable.
@@ -109,3 +121,25 @@ spec:
           secretName: rclone
       - name: data
         emptyDir: {}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: web-scraper
+    app.kubernetes.io/name: food-scraper
+    app.kubernetes.io/part-of: food
+  name: food-scraper
+  namespace: binomial
+spec:
+  endpoints:
+  - interval: 15s
+    port: http
+  - interval: 15s
+    port: rclone
+    path: /metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: web-scraper
+      app.kubernetes.io/name: food-scraper
+      app.kubernetes.io/part-of: food
