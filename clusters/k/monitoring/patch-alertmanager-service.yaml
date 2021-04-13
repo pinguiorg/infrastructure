@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: alertmanager.k.squat.ai
+  name: alertmanager-main
+  namespace: monitoring
+spec:
+  ports:
+  - port: 9093
+    $patch: delete
+  - name: web
+    port: 80
+    targetPort: web

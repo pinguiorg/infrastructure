@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: prometheus.k.squat.ai
+  name: prometheus-k8s
+  namespace: monitoring
+spec:
+  ports:
+  - port: 9090
+    $patch: delete
+  - name: web
+    port: 80
+    targetPort: web
