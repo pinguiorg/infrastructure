@@ -7,8 +7,6 @@ metadata:
   namespace: monitoring
 spec:
   ports:
-  - port: 9090
-    $patch: delete
-  - name: web
+  - name: http
     port: 80
     targetPort: web
