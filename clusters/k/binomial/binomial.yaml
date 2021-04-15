@@ -10,6 +10,26 @@ metadata:
   namespace: binomial
 spec:
   size: 1
+  pod:
+    enableMetrics: true
+    metricsImage: "synadia/prometheus-nats-exporter"
+    metricsImageTag: "0.3.0"
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nats-cluster
+  namespace: binomial
+  labels:
+    app.kubernetes.io/name: nats
+    nats_cluster: food
+spec:
+  selector:
+    matchLabels:
+      app: nats
+      nats_cluster: food
+  endpoints:
+  - port: metrics
 ---
 apiVersion: streaming.nats.io/v1alpha1
 kind: NatsStreamingCluster
