@@ -13,7 +13,10 @@ spec:
   pod:
     enableMetrics: true
     metricsImage: "synadia/prometheus-nats-exporter"
-    metricsImageTag: "0.3.0"
+    metricsImageTag: "0.6.2"
+    enableConfigReload: true
+    reloaderImage: natsio/nats-server-config-reloader
+    reloaderImageTag: "0.6.1"
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
