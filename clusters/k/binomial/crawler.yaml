@@ -85,11 +85,4 @@ spec:
         - crawl
         - epicurious
         - --url=nats://food.binomial.svc.cluster.local:4222
-        - --client-id=$(POD_NAME)
-        - --cluster-id=food-stan
-        env:
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
       restartPolicy: OnFailure
