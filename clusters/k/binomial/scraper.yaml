@@ -13,8 +13,6 @@ spec:
   - name: http
     port: 80
     targetPort: 8000
-  - name: rclone
-    port: 5572
   selector:
     app.kubernetes.io/component: web-scraper
     app.kubernetes.io/name: food-scraper
@@ -44,58 +42,17 @@ spec:
         app.kubernetes.io/name: food-scraper
         app.kubernetes.io/part-of: food
     spec:
-      # We need an init container to copy the configuration file
-      # because rclone requires that the file be writable.
       initContainers:
-      - name: config
+      - name: init
         image: alpine
         command:
-          - cp
-        args:
-          - -v
-          - /in/rclone.conf
-          - /out/rclone.conf
+        - /bin/sh
+        - -c
+        - 'mkdir -p /mnt/s3/food && chmod 777 /mnt/s3/food'
         volumeMounts:
-        - name: config-in
-          mountPath: /in
-        - name: config-out
-          mountPath: /out
+        - name: s3
+          mountPath: /mnt/s3
       containers:
-      - name: rclone
-        image: rclone/rclone
-        args:
-          - mount
-          - 'storage:'
-          - /data
-          - --config=/etc/rclone/rclone.conf
-          - --allow-non-empty
-          - --allow-other
-          - --rc
-          - --rc-addr=0.0.0.0:5572
-          - --rc-enable-metrics
-          - --vfs-cache-mode=full
-          - --no-modtime
-          - --transfers=10
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "fusermount -uz /data"]
-        ports:
-        - containerPort: 5572
-          protocol: TCP
-        securityContext:
-          # The container has to be privileged in order
-          # to use a Bidirectional mount.
-          privileged: true
-        resources:
-          limits:
-            squat.ai/fuse: 1
-        volumeMounts:
-        - name: config-out
-          mountPath: /etc/rclone
-        - name: data
-          mountPath: /data
-          mountPropagation: Bidirectional
       - name: food
         image: binomiallabs/food
         command:
@@ -106,15 +63,55 @@ spec:
         - containerPort: 8000
           protocol: TCP
         volumeMounts:
-        - name: data
+        - name: s3
           mountPath: /data
+      - name: s3
+        image: cloudposse/goofys
+        env:
+        - name: MOUNT_DIR
+          value: /mnt/s3/food
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: s3
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: s3
+              key: AWS_SECRET_ACCESS_KEY
+        - name: BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: s3
+              key: BUCKET
+        - name: ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: s3
+              key: ENDPOINT
+        - name: REGION
+          valueFrom:
+            secretKeyRef:
+              name: s3
+              key: REGION
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "fusermount -uz $MOUNT_DIR"]
+        securityContext:
+          # The container has to be privileged in order
+          # to use a Bidirectional mount.
+          privileged: true
+        resources:
+          limits:
+            squat.ai/fuse: 1
+        volumeMounts:
+        - name: s3
+          mountPath: /mnt/s3
+          mountPropagation: Bidirectional
       volumes:
-      - name: config-out
-        emptyDir: {}
-      - name: config-in
-        secret:
-          secretName: rclone
-      - name: data
+      - name: s3
         emptyDir: {}
 ---
 apiVersion: monitoring.coreos.com/v1
@@ -130,9 +127,6 @@ spec:
   endpoints:
   - interval: 15s
     port: http
-  - interval: 15s
-    port: rclone
-    path: /metrics
   selector:
     matchLabels:
       app.kubernetes.io/component: web-scraper
