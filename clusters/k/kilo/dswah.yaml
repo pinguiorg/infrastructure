@@ -1,9 +1,9 @@
 apiVersion: kilo.squat.ai/v1alpha1
 kind: Peer
 metadata:
-  name: squat
+  name: dswah
 spec:
   allowedIPs:
-  - 10.5.0.2/32
+  - 10.5.0.3/32
   persistentKeepalive: 10
-  publicKey: kB0Q/wZfVLE1+fruqB/3VFuQOvg6nN3rSgEgOBKyEW4=
+  publicKey: v440nDR2Mawgsr/FSY2IbMZkD+/VoewvGldU10P0vjU=
