@@ -18,7 +18,7 @@ spec:
       priorityClassName: system-node-critical
       containers:
       - name: kube-router
-        image: cloudnativelabs/kube-router:v1.0.0-rc5
+        image: cloudnativelabs/kube-router:v1.2.2
         args:
         - --run-router=false
         - --run-firewall=true
