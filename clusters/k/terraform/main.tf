@@ -16,7 +16,7 @@ module "workers" {
 }
 
 resource "hcloud_network" "network" {
-  name     = "cluster_name"
+  name     = var.cluster_name
   ip_range = var.host_cidr
 }
 
