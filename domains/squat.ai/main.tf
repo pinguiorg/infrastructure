@@ -35,13 +35,6 @@ resource "google_dns_managed_zone" "squat" {
   description = "Production DNS zone"
 }
 
-resource "cloudflare_record" "k" {
-  zone_id = cloudflare_zone.squat.id
-  name    = "k"
-  type    = "CNAME"
-  value   = "liao.duckdns.org"
-}
-
 resource "cloudflare_record" "kilo" {
   zone_id = cloudflare_zone.squat.id
   name    = "kilo"

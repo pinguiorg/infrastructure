@@ -44,3 +44,20 @@ resource "hcloud_network_subnet" "worker-pool" {
   network_zone = "eu-central"
   ip_range     = var.worker_pool_cidr
 }
+
+locals {
+  squat_domain = "squat.ai"
+}
+
+data "cloudflare_zones" "squat" {
+  filter {
+    name        = local.squat_domain
+  }
+}
+
+resource "cloudflare_record" "k" {
+  zone_id = data.cloudflare_zones.squat.zones[0].id
+  name    = "k"
+  type    = "A"
+  value   = split(":", module.controllers.api)[0]
+}
