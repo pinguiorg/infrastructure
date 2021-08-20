@@ -1,23 +1,24 @@
-variable "api" {
-  type        = string
-  description = "The URL of the Kubernetes API"
-  sensitive   = true
-}
-
-variable "token" {
-  type        = string
-  description = "The kubeadm join token"
-  sensitive   = true
-}
-
-variable "ca_cert_hash" {
-  type        = string
-  description = "The hash of the CA certificate"
-}
-
-variable "node_count" {
+variable "controller_count" {
   type        = number
-  description = "The number of nodes to create"
+  description = "Number of controllers (i.e. masters)"
+  default     = 1
+}
+
+variable "worker_count" {
+  type        = number
+  description = "Number of workers"
+  default     = 0
+}
+
+variable "worker_pool" {
+  type        = bool
+  description = "Whether or not a worker pool should be created"
+  default     = false
+}
+
+variable "worker_pool_count" {
+  type        = number
+  description = "Number of workers in the additional worker pool"
   default     = 1
 }
 
@@ -42,10 +43,16 @@ variable "ssh_keys" {
   description = "SSH public keys for user 'core' and to register on Hetzner Cloud"
 }
 
-variable "server_type" {
+variable "controller_type" {
   type        = string
   default     = "cx11"
-  description = "The server type to rent"
+  description = "The server type to rent for controllers"
+}
+
+variable "worker_type" {
+  type        = string
+  default     = "cx11"
+  description = "The server type to rent for workers"
 }
 
 variable "datacenter" {
@@ -68,4 +75,16 @@ variable "host_cidr" {
   type        = string
   description = "CIDR IPv4 range to assign to the nodes"
   default     = "10.0.0.0/16"
+}
+
+variable "worker_pool_cidr" {
+  type        = string
+  description = "CIDR IPv4 range to assign to the nodes in the worker pool"
+  default     = "10.10.0.0/16"
+}
+
+variable "apiserver_extra_args" {
+  type        = string
+  description = "Extra arguments to pass to the API server as a JSON object, e.g. {\"oidc-username-claim\": \"email\", \"oidc-groups-claim\": \"groups\"}"
+  default     = ""
 }
