@@ -2,7 +2,7 @@
 
 SECRETS := $(shell grep -r -l "^kind: Secret$$" ./{adjacency,binomial,dashboard,external-dns,fluxcdbot,flux-system,kilo,kube-system,matchbox,monitoring})
 SEALED_SECRETS := $(addsuffix -sealed.yaml,$(basename $(SECRETS)))
-MONITORING_MANIFESTS := $(shell find monitoring -type f -regex '.*\.yaml$$' | sed 's|^monitoring/||g' | grep -v 'kustomization\.yaml$$' | grep -v '^alertmanager-secret.yaml$$' | grep -v '^patch-.*.yaml$$')
+MONITORING_MANIFESTS := $(shell find monitoring/setup monitoring -maxdepth 1 -type f -name '*.yaml' | sed 's|^monitoring/||g' | grep -v 'kustomization\.yaml$$' | grep -v '^alertmanager-secret.yaml$$' | grep -v '^patch-.*.yaml$$')
 
 all: $(SEALED_SECRETS) sealed-secrets-controller-certificate.pem
 
