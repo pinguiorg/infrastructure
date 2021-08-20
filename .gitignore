@@ -1,4 +1,5 @@
 *secret*
 !*secret-sealed*
 !sealed-secrets-controller-certificate.pem
+!sealed-secrets-controller.yaml
 *.tar.gz
