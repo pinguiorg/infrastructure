@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: adjacency
+bases:
+- ../../base/adjacency
+resources:
+- manifests/adjacency-curl.yaml
+- manifests/secret-sealed.yaml
+patchesStrategicMerge:
+- manifests/patch-adjacency.yaml

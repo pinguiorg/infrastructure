@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+- ../../base/monitoring
+resources:
+- manifests/alertmanager-secret-sealed.yaml
+- manifests/grafana-dashboardDatasources-secret-sealed.yaml
+patchesStrategicMerge:
+- manifests/patch-alertmanager-secret-sealed.yaml
+patches:
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+  target:
+    kind: Prometheus
+    name: k8s
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+  target:
+    kind: Alertmanager
+    name: main

@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: binomial
+resources:
+- namespace.yaml
+- manifests/rbac.yaml
+- manifests/crawler.yaml
+- manifests/nats.yaml
+- manifests/scraper.yaml

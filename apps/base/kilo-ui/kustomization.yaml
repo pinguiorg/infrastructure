@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kilo-ui
+resources:
+- namespace.yaml
+- manifests/kilosubspace.yaml
+- manifests/wg-gen-web.yaml

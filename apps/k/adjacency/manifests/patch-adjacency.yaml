@@ -1,0 +1,12 @@
+kind: DaemonSet
+apiVersion: apps/v1
+metadata: 
+  name: adjacency
+spec:
+  template:
+    spec:
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      - effect: NoExecute
+        operator: Exists
