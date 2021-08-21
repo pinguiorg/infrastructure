@@ -4,4 +4,24 @@ namespace: kilo-ui
 resources:
 - namespace.yaml
 - manifests/kilosubspace.yaml
-- manifests/wg-gen-web.yaml
+- manifests/kilo-wg-gen-web-oidc-rbac.yaml
+- manifests/kilo-wg-gen-web-oidc-rbac-headless.yaml
+patchesStrategicMerge:
+- |-
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: kilo-wg-gen-web
+  spec:
+      clusterIP:
+- |-
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: kilo-wg-gen-web
+  spec:
+    template:
+      spec:
+        volumes:
+        - name: tmp-volume
+          $patch: delete

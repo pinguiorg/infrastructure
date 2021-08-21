@@ -4,3 +4,31 @@ bases:
 - ../../base/kilo-ui
 resources:
 - manifests/secret-sealed.yaml
+patchesStrategicMerge:
+- |-
+  apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: wg-gen-web.k.squat.ai
+    name: kilo-wg-gen-web
+- |-
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: kilo-wg-gen-web
+  spec:
+    template:
+      spec:
+        initContainers:
+        - name: setnode
+          env:
+          - name: NODE
+            value: k-worker-pool-0
+          - name: ALLOWED_IPS
+            value: 10.5.0.0/16,10.43.0.0/16,10.42.0.0/16
+          - name: ADDRESS_POOLS
+            value: 10.6.0.0/16
+        containers:
+        - name: proxy
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.1.3

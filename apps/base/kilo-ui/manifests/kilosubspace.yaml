@@ -45,7 +45,7 @@ spec:
         app.kubernetes.io/name: kilosubspace
     spec:
       containers:
-      - image: squat/kilosubspace:arm64-25850f6d76fb83aaf5b9892b752c04d0578859ba-dirty
+      - image: squat/kilosubspace:amd64-25850f6d76fb83aaf5b9892b752c04d0578859ba
         name: kilosubspace
         command:
         - /bin/bash
