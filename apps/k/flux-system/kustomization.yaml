@@ -1,11 +1,21 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
 resources:
-- gotk-components.yaml
-- gotk-sync.yaml
-- github-secret-sealed.yaml
-- pgp-public-keys-secret-sealed.yaml
-- fluxcdbot-secret-sealed.yaml
-- notification.yaml
-patchesStrategicMerge:
-- patch.yaml
+- manifests/github-secret-sealed.yaml
+- manifests/pgp-public-keys-secret-sealed.yaml
+- manifests/fluxcdbot-secret-sealed.yaml
+- manifests/notification.yaml
+patches:
+- |-
+  apiVersion: source.toolkit.fluxcd.io/v1beta1
+  kind: GitRepository
+  metadata:
+    name: flux-system
+    namespace: flux-system
+  spec:
+    ignore: |
+      terraform/
+    verify:
+      mode: head
+      secretRef:
+        name: pgp-public-keys
