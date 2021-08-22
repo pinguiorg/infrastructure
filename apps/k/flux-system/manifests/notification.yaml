@@ -23,6 +23,12 @@ spec:
     - kind: Kustomization
       name: flux-system
       namespace: flux-system
+    - kind: Kustomization
+      name: services
+      namespace: flux-system
+    - kind: Kustomization
+      name: apps
+      namespace: flux-system
 ---
 apiVersion: notification.toolkit.fluxcd.io/v1beta1
 kind: Provider
@@ -37,12 +43,12 @@ spec:
 apiVersion: notification.toolkit.fluxcd.io/v1beta1
 kind: Alert
 metadata:
-  name: fluxcdbot-error
+  name: fluxcdbot
   namespace: flux-system
 spec:
   providerRef:
     name: fluxcdbot
-  eventSeverity: error
+  eventSeverity: info
   eventSources:
     - kind: Kustomization
       name: flux-system
@@ -52,18 +58,4 @@ spec:
       namespace: flux-system
     - kind: Kustomization
       name: apps
-      namespace: flux-system
----
-apiVersion: notification.toolkit.fluxcd.io/v1beta1
-kind: Alert
-metadata:
-  name: fluxcdbot-info
-  namespace: flux-system
-spec:
-  providerRef:
-    name: fluxcdbot
-  eventSeverity: info
-  eventSources:
-    - kind: GitRepository
-      name: flux-system
       namespace: flux-system
