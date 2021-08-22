@@ -48,7 +48,7 @@ metadata:
 spec:
   providerRef:
     name: fluxcdbot
-  eventSeverity: info
+  eventSeverity: error
   eventSources:
     - kind: Kustomization
       name: flux-system
