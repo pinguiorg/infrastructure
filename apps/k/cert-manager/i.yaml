@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: adjacency-k-squat-ai
+  namespace: adjacency
+spec:
+  tls:
+  - hosts:
+      - adjacency.k.squat.ai
+    secretName: tls
+  rules:
+  - host: adjacency.k.squat.ai
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service1
+            port:
+              number: 8080
