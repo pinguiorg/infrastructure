@@ -61,3 +61,17 @@ resource "cloudflare_record" "k" {
   type    = "A"
   value   = split(":", module.controllers.api)[0]
 }
+
+resource "cloudflare_record" "wg-4" {
+  zone_id = data.cloudflare_zones.squat.zones[0].id
+  name    = "wg.k"
+  type    = "A"
+  value   = module.controllers.ips["k-controller-0"].ipv4
+}
+
+resource "cloudflare_record" "wg-6" {
+  zone_id = data.cloudflare_zones.squat.zones[0].id
+  name    = "wg.k"
+  type    = "AAAA"
+  value   = module.controllers.ips["k-controller-0"].ipv6
+}
