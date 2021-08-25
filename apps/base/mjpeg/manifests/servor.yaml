@@ -27,7 +27,7 @@ spec:
       containers:
       - name: servor
         imagePullPolicy: Always
-        image: squat/servor:arm64-163ba0f61eb76c43fe7d779c34bb5cc5c0408a80-dirty
+        image: squat/servor:e8bb47ad6a035fe1bb5428790a865e0da51893a8
         args:
         - --listen=0.0.0.0:8080
         - --min=0.03
