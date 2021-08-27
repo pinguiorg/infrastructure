@@ -8,3 +8,4 @@ resources:
 - ../kilo-ui
 - ../matchbox
 - ../../base/mjpeg
+- ../snapcast

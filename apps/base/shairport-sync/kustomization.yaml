@@ -1,0 +1,49 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+patchesStrategicMerge:
+- |-
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: snapserver
+  spec:
+    template:
+      spec:
+        hostNetwork: true
+        containers:
+        - name: shairport-sync
+          image: mikebrady/shairport-sync
+          command:
+          - /usr/local/bin/shairport-sync
+          args:
+          - --name=AirPlay
+          - --output=pipe
+          - --
+          - /var/lib/fifo/shairport-sync
+          volumeMounts:
+          - name: fifo
+            mountPath: /var/lib/fifo
+          - name: dbus
+            mountPath: /var/run/dbus
+        - name: shairport-sync-dbus
+          image: mikebrady/shairport-sync
+          command:
+          - /usr/bin/dbus-daemon
+          args:
+          - --system
+          - --nofork
+          volumeMounts:
+          - name: dbus
+            mountPath: /var/run/dbus
+        - name: shairport-sync-avahi
+          image: mikebrady/shairport-sync
+          command:
+          - /usr/sbin/avahi-daemon
+          args:
+          - --no-chroot
+          volumeMounts:
+          - name: dbus
+            mountPath: /var/run/dbus
+        volumes:
+        - name: dbus
+          emptyDir: {}
