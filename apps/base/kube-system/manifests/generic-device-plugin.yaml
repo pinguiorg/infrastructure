@@ -29,6 +29,8 @@ spec:
         - '{"type": "video", "paths": ["/dev/video0"]}'
         - --device
         - '{"type": "fuse", "count": 10, "paths": ["/dev/fuse"]}'
+        - --device
+        - '{"type": "audio", "count": 10, "paths": ["/dev/snd"]}'
         name: generic-device-plugin
         resources:
           requests:
