@@ -21,16 +21,30 @@ spec:
       - operator: "Exists"
         effect: "NoSchedule"
       containers:
-      - image: squat/generic-device-plugin
+      - image: squat/generic-device-plugin:4fb95033cf6176eaa4ad4f14a0e4c5d7a1c7beca
         args:
         - --device
-        - '{"type": "serial", "paths": ["/dev/ttyusb*","/dev/ttyacm*","/dev/tty.usb*","/dev/cu.*","/dev/cuau*","/dev/rfcomm*"]}'
+        - '{"name": "serial", "groups": [
+            {"paths": [{"path": "/dev/ttyUSB*"}]},
+            {"paths": [{"path": "/dev/ttyACM*"}]},
+            {"paths": [{"path": "/dev/tty.usb*"}]},
+            {"paths": [{"path": "/dev/cu.*"}]},
+            {"paths": [{"path": "/dev/cuaU*"}]},
+            {"paths": [{"path": "/dev/rfcomm*"}]}
+          ]}'
         - --device
-        - '{"type": "video", "paths": ["/dev/video0"]}'
+        - '{"name": "video", "groups": [{"paths": [{"path": "/dev/video0"}]}]}'
         - --device
-        - '{"type": "fuse", "count": 10, "paths": ["/dev/fuse"]}'
+        - '{"name": "fuse", "groups": [{"count": 10, "paths": [{"path": "/dev/fuse"}]}]}'
         - --device
-        - '{"type": "audio", "count": 10, "paths": ["/dev/snd"]}'
+        - '{"name": "audio", "groups": [{"count": 10, "paths": [{"path": "/dev/snd"}]}]}'
+        - --device
+        - '{"name": "capture", "groups": [
+            {"paths": [{"path": "/dev/snd/controlC0"}, {"path": "/dev/snd/pcmC0D0c"}]},
+            {"paths": [{"path": "/dev/snd/controlC1", "mountPath": "/dev/snd/controlC0"}, {"path": "/dev/snd/pcmC1D0c", "mountPath": "/dev/snd/pcmC0D0c"}]},
+            {"paths": [{"path": "/dev/snd/controlC2", "mountPath": "/dev/snd/controlC0"}, {"path": "/dev/snd/pcmC2D0c", "mountPath": "/dev/snd/pcmC0D0c"}]},
+            {"paths": [{"path": "/dev/snd/controlC3", "mountPath": "/dev/snd/controlC0"}, {"path": "/dev/snd/pcmC3D0c", "mountPath": "/dev/snd/pcmC0D0c"}]}
+          ]}'
         name: generic-device-plugin
         resources:
           requests:
