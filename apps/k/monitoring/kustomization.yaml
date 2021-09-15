@@ -7,6 +7,9 @@ resources:
 - manifests/grafana-dashboardDatasources-secret-sealed.yaml
 patchesStrategicMerge:
 - manifests/patch-alertmanager-secret-sealed.yaml
+- manifests/patch-alertmanager-service.yaml
+- manifests/patch-prometheus-service.yaml
+- manifests/patch-prometheus-prometheus.yaml
 patches:
 - patch: |-
     - op: replace
