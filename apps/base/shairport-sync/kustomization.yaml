@@ -12,7 +12,7 @@ patchesStrategicMerge:
         hostNetwork: true
         containers:
         - name: shairport-sync
-          image: mikebrady/shairport-sync
+          image: mikebrady/shairport-sync:3.3.8
           command:
           - /usr/local/bin/shairport-sync
           args:
@@ -26,7 +26,7 @@ patchesStrategicMerge:
           - name: dbus
             mountPath: /var/run/dbus
         - name: shairport-sync-dbus
-          image: mikebrady/shairport-sync
+          image: mikebrady/shairport-sync:3.3.8
           command:
           - /usr/bin/dbus-daemon
           args:
@@ -36,7 +36,7 @@ patchesStrategicMerge:
           - name: dbus
             mountPath: /var/run/dbus
         - name: shairport-sync-avahi
-          image: mikebrady/shairport-sync
+          image: mikebrady/shairport-sync:3.3.8
           command:
           - /usr/sbin/avahi-daemon
           args:

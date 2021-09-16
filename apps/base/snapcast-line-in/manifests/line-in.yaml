@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: line-in
+    app.kubernetes.io/part-of: snapcast-line-in
+  name: line-in
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: line-in
+    app.kubernetes.io/part-of: snapcast-line-in
+  ports:
+  - name: audio
+    protocol: TCP
+    port: 1704
+    targetPort: audio
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: line-in-headless
+  labels:
+    app.kubernetes.io/name: line-in
+    app.kubernetes.io/part-of: snapcast-line-in
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: line-in
+    app.kubernetes.io/part-of: snapcast-line-in
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: http
+  - name: audio
+    protocol: TCP
+    port: 1704
+    targetPort: audio
+  - name: tcp
+    protocol: TCP
+    port: 1705
+    targetPort: tcp
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: line-in
+    app.kubernetes.io/part-of: snapcast-line-in
+  name: line-in
+spec:
+  replicas: 1
+  serviceName: line-in-headless
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: line-in
+      app.kubernetes.io/part-of: snapcast-line-in
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: line-in
+        app.kubernetes.io/part-of: snapcast-line-in
+    spec:
+      initContainers:
+      - name: line-in-fifo
+        image: alpine:3.13.6
+        command:
+        - /usr/bin/mkfifo
+        args:
+        - /var/lib/fifo/line-in
+        volumeMounts:
+        - name: fifo
+          mountPath: /var/lib/fifo
+      containers:
+      - name: netcat
+        image: alpine:3.13.6
+        command:
+        - /bin/sh
+        - -c
+        - cat /var/lib/fifo/line-in | nc -v -lk -p 1704
+        ports:
+        - name: audio
+          containerPort: 1704
+        volumeMounts:
+        - name: fifo
+          mountPath: /var/lib/fifo
+      - name: line-in
+        image: squat/cpiped:15f92d7
+        args:
+        - -d
+        - hw
+        - /var/lib/fifo/line-in
+        volumeMounts:
+        - name: fifo
+          mountPath: /var/lib/fifo
+      volumes:
+      - name: fifo
+        emptyDir: {}

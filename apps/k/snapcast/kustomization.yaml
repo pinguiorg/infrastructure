@@ -5,6 +5,7 @@ bases:
 components:
 - ../../base/librespot
 - ../../base/shairport-sync
+- ../../base/snapcast-line-in
 patchesStrategicMerge:
 - |-
   apiVersion: apps/v1
@@ -18,9 +19,10 @@ patchesStrategicMerge:
         containers:
         - name: snapserver
           args:
-          - --stream.source=pipe:///var/lib/fifo/librespot?name=Spotify&mode=read&sampleformat=44100:16:2
+          - --stream.source=meta:///AirPlay/Spotify/Turntable?name=Auto
           - --stream.source=pipe:///var/lib/fifo/shairport-sync?name=AirPlay&mode=read&sampleformat=44100:16:2
-          - --stream.source=meta:///AirPlay/Spotify?name=Auto
+          - --stream.source=pipe:///var/lib/fifo/librespot?name=Spotify&mode=read&sampleformat=44100:16:2
+          - --stream.source=tcp://$(LINE_IN_SERVICE_HOST):$(LINE_IN_SERVICE_PORT_AUDIO)?name=Turntable&mode=client
 - |-
   apiVersion: v1
   kind: Service
@@ -42,3 +44,17 @@ patchesStrategicMerge:
             limits:
               squat.ai/audio: 1
         nodeName: tiantao
+- |-
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: line-in
+  spec:
+    template:
+      spec:
+        containers:
+        - name: line-in
+          resources:
+            limits:
+              squat.ai/capture: 1
+        nodeName: lu
