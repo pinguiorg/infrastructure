@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonLabels:
+  app.kubernetes.io/instance: camera
+bases:
+- ../../../base/snapcast/line-in
+nameSuffix: -camera
+patchesStrategicMerge:
+- |-
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: line-in
+  spec:
+    template:
+      spec:
+        containers:
+        - name: line-in
+          resources:
+            limits:
+              squat.ai/capture: 1
+        nodeName: liao

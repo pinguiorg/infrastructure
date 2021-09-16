@@ -1,11 +1,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 bases:
-- ../../base/snapcast
+- ../../base/snapcast/snapserver
+resources:
+- namespace.yaml
+- sofa
+- sideboard
+- camera
+- turntable
 components:
 - ../../base/librespot
 - ../../base/shairport-sync
-- ../../base/snapcast-line-in
 patchesStrategicMerge:
 - |-
   apiVersion: apps/v1
@@ -22,7 +27,8 @@ patchesStrategicMerge:
           - --stream.source=meta:///AirPlay/Spotify/Turntable?name=Auto
           - --stream.source=pipe:///var/lib/fifo/shairport-sync?name=AirPlay&mode=read&sampleformat=44100:16:2
           - --stream.source=pipe:///var/lib/fifo/librespot?name=Spotify&mode=read&sampleformat=44100:16:2
-          - --stream.source=tcp://$(LINE_IN_SERVICE_HOST):$(LINE_IN_SERVICE_PORT_AUDIO)?name=Turntable&mode=client
+          - --stream.source=tcp://$(LINE_IN_TURNTABLE_SERVICE_HOST):$(LINE_IN_TURNTABLE_SERVICE_PORT_AUDIO)?name=Turntable&mode=client
+          - --stream.source=tcp://$(LINE_IN_CAMERA_SERVICE_HOST):$(LINE_IN_CAMERA_SERVICE_PORT_AUDIO)?name=Camera&mode=client
 - |-
   apiVersion: v1
   kind: Service
@@ -30,31 +36,3 @@ patchesStrategicMerge:
     annotations:
       external-dns.alpha.kubernetes.io/hostname: snapcast.k.squat.ai
     name: snapserver
-- |-
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: snapclient
-  spec:
-    template:
-      spec:
-        containers:
-        - name: snapclient
-          resources:
-            limits:
-              squat.ai/audio: 1
-        nodeName: tiantao
-- |-
-  apiVersion: apps/v1
-  kind: StatefulSet
-  metadata:
-    name: line-in
-  spec:
-    template:
-      spec:
-        containers:
-        - name: line-in
-          resources:
-            limits:
-              squat.ai/capture: 1
-        nodeName: lu
