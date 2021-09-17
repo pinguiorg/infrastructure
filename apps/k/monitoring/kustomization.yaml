@@ -5,6 +5,8 @@ bases:
 resources:
 - manifests/alertmanager-secret-sealed.yaml
 - manifests/grafana-dashboardDatasources-secret-sealed.yaml
+- manifests/prometheus-roleSpecificNamespaces.yaml
+- manifests/prometheus-roleBindingSpecificNamespaces.yaml
 patchesStrategicMerge:
 - manifests/patch-alertmanager-secret-sealed.yaml
 - manifests/patch-alertmanager-service.yaml
