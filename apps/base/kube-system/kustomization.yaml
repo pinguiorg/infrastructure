@@ -3,5 +3,6 @@ kind: Kustomization
 namespace: kube-system
 resources:
 - manifests/generic-device-plugin.yaml
+- manifests/generic-device-plugin-podmonitor.yaml
 - manifests/kube-router.yaml
 - manifests/sealed-secrets-controller.yaml
