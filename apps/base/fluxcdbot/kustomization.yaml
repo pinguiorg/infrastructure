@@ -4,3 +4,4 @@ namespace: fluxcdbot
 resources:
 - namespace.yaml
 - manifests/fluxcdbot.yaml
+- manifests/podmonitor.yaml
