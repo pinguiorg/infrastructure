@@ -4,6 +4,8 @@ commonLabels:
   app.kubernetes.io/instance: camera
 bases:
 - ../../../base/snapcast/line-in
+components:
+- ../../../base/snapcast/line-in/mono
 nameSuffix: -camera
 patchesStrategicMerge:
 - |-

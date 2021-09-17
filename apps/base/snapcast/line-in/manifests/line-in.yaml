@@ -87,9 +87,16 @@ spec:
         - name: fifo
           mountPath: /var/lib/fifo
       - name: line-in
-        image: squat/cpiped:15f92d7
-        args:
-        - -d
+        image: squat/alsa-utils:11af986
+        command:
+        - arecord
+        - -c
+        - '2'
+        - -f
+        - S16_LE
+        - -r
+        - '48000'
+        - -D
         - hw
         - /var/lib/fifo/line-in
         volumeMounts:
