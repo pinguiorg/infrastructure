@@ -8,3 +8,7 @@ resources:
 - manifests/secret-sealed.yaml
 patchesStrategicMerge:
 - manifests/patch-adjacency.yaml
+
+images:
+- name: kiloio/adjacency
+  newTag: de50dfe
