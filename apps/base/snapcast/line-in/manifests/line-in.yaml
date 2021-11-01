@@ -79,7 +79,7 @@ spec:
         command:
         - /bin/sh
         - -c
-        - cat /var/lib/fifo/line-in | nc -v -lk -p 1704
+        - nc -vlkp 1704 < /var/lib/fifo/line-in
         ports:
         - name: audio
           containerPort: 1704
