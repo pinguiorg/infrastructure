@@ -59,6 +59,7 @@ spec:
       - name: external-dns
         image: k8s.gcr.io/external-dns/external-dns:v0.8.0
         args:
+        - --source=ingress
         - --source=service
         - --domain-filter=squat.ai
         - --provider=cloudflare
