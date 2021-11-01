@@ -6,7 +6,6 @@ resources:
 - ../../base/local-path-storage
 - ../monitoring
 - ../external-dns
-- ../../base/hnc
 - ../../base/peers
 - ../../base/rbac
 - ../cert-manager
