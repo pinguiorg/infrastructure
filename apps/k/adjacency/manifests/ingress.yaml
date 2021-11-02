@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-signin: https://auth.k.squat.ai/oauth2/start?rd=https%3A%2F%2F$host$escaped_request_uri
+    nginx.ingress.kubernetes.io/auth-url: https://auth.k.squat.ai/oauth2/auth
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: adjacency-k-squat-ai
+  namespace: adjacency
+spec:
+  tls:
+  - hosts:
+      - adjacency.k.squat.ai
+    secretName: tls
+  rules:
+  - host: adjacency.k.squat.ai
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: adjacency
+            port:
+              number: 8080

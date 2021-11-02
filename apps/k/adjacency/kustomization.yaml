@@ -6,9 +6,9 @@ bases:
 resources:
 - manifests/adjacency-curl.yaml
 - manifests/secret-sealed.yaml
+- manifests/ingress.yaml
 patchesStrategicMerge:
 - manifests/patch-adjacency.yaml
-
 images:
 - name: kiloio/adjacency
   newTag: de50dfe
