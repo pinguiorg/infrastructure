@@ -46,3 +46,11 @@ patchesJSON6902:
   target:
     kind: Deployment
     name: ingress-nginx-controller
+- patch: |-
+    - op: remove
+      path: /spec/ipFamilies
+    - op: remove
+      path: /spec/ipFamilyPolicy
+  target:
+    kind: Service
+    name: ingress-nginx-controller
