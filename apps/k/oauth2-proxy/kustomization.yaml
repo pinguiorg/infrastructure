@@ -1,0 +1,61 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: oauth2-proxy
+bases:
+- ../../base/oauth2-proxy
+resources:
+- manifests/secret-sealed.yaml
+- manifests/configmap.yaml
+patchesStrategicMerge:
+- |-
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+    name: oauth2-proxy
+- |-
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: oauth2-proxy
+    namespace: oauth2-proxy
+  spec:
+    template:
+      spec:
+        containers:
+        - name: oauth2-proxy
+          volumeMounts:
+          - name: emails
+            mountPath: /var/lib/oauth2-proxy
+        volumes:
+        - name: emails
+          configMap:
+            name: oauth2-proxy
+            items:
+            - key: emails
+              path: emails
+patchesJSON6902:
+- patch: |-
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: auth.k.squat.ai
+    - op: replace
+      path: /spec/rules/0/host
+      value: auth.k.squat.ai
+  target:
+    kind: Ingress
+    name: oauth2-proxy
+- patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/args/-
+      value: --cookie-domain=.k.squat.ai
+    - op: add
+      path: /spec/template/spec/containers/0/args/-
+      value: --whitelist-domain=.k.squat.ai
+    - op: add
+      path: /spec/template/spec/containers/0/args/-
+      value: --authenticated-emails-file=/var/lib/oauth2-proxy/emails
+  target:
+    kind: Deployment
+    name: oauth2-proxy

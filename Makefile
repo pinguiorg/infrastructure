@@ -1,7 +1,7 @@
 .PHONY: all secrets test
 
 CLUSTER ?= k
-SECRETS := $(shell grep -r -l "^kind: Secret$$" $(addprefix apps/$(CLUSTER)/,adjacency binomial cert-manager dashboard external-dns fluxcdbot flux-system kilo-ui kube-system matchbox monitoring))
+SECRETS := $(shell grep -r -l "^kind: Secret$$" $(addprefix apps/$(CLUSTER)/,adjacency binomial cert-manager dashboard external-dns fluxcdbot flux-system kilo-ui kube-system oauth2-proxy matchbox monitoring))
 SEALED_SECRETS := $(addsuffix -sealed.yaml,$(basename $(SECRETS)))
 MONITORING_MANIFESTS = $(shell find apps/base/monitoring/setup apps/base/monitoring -maxdepth 1 -type f -name '*.yaml' | sed 's|^apps/base/monitoring/||g' | grep -v 'kustomization\.yaml$$' | grep -v '-secret.yaml$$' | grep -v '^patch-.*.yaml$$')
 INGRESS_NGINX_MANIFESTS = $(shell find apps/base/ingress-nginx/manifests -maxdepth 1 -type f -name '*.yaml' | sed 's|^apps/base/ingress-nginx/manifests/||g' | grep -v 'kustomization\.yaml$$' | grep -v '-secret.yaml$$' | grep -v '^patch-.*.yaml$$')
