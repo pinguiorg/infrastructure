@@ -4,3 +4,4 @@ namespace: dashboard
 resources:
 - namespace.yaml
 - manifests/dashboard.yaml
+- manifests/ingress.yaml

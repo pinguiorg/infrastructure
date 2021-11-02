@@ -5,4 +5,25 @@ bases:
 resources:
 - manifests/csrf-secret-sealed.yaml
 - manifests/key-holder-secret-sealed.yaml
-- manifests/secret-sealed.yaml
+patchesStrategicMerge:
+- |-
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+      nginx.ingress.kubernetes.io/auth-signin: https://auth.k.squat.ai/oauth2/start?rd=https%3A%2F%2F$host$escaped_request_uri
+      nginx.ingress.kubernetes.io/auth-url: https://auth.k.squat.ai/oauth2/auth
+      nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    name: dashboard
+patchesJSON6902:
+- patch: |-
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: dashboard.k.squat.ai
+    - op: replace
+      path: /spec/rules/0/host
+      value: dashboard.k.squat.ai
+  target:
+    kind: Ingress
+    name: dashboard
