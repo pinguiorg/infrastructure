@@ -1,5 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: snapcast
+commonLabels:
+  app.kubernetes.io/name: snapserver
+  app.kubernetes.io/part-of: snapcast
 resources:
 - manifests/snapserver.yaml
+- manifests/ingress.yaml
