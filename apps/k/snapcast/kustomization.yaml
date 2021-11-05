@@ -13,6 +13,13 @@ components:
 - ../../base/shairport-sync
 patchesStrategicMerge:
 - |-
+  apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: snapserver.k.squat.ai
+    name: snapserver
+- |-
   apiVersion: apps/v1
   kind: StatefulSet
   metadata:
