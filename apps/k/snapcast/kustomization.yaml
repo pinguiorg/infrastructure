@@ -31,10 +31,10 @@ patchesStrategicMerge:
         containers:
         - name: snapserver
           args:
-          - --stream.source=meta:///AirPlay/Spotify/Turntable?name=Auto
-          - --stream.source=pipe:///var/lib/fifo/shairport-sync?name=AirPlay&mode=read&sampleformat=44100:16:2
+          - --stream.source=meta:///Spotify/Turntable/AirPlay?name=Auto
           - --stream.source=pipe:///var/lib/fifo/librespot?name=Spotify&mode=read&sampleformat=44100:16:2
           - --stream.source=tcp://$(LINE_IN_TURNTABLE_SERVICE_HOST):$(LINE_IN_TURNTABLE_SERVICE_PORT_AUDIO)?name=Turntable&mode=client
+          - --stream.source=pipe:///var/lib/fifo/shairport-sync?name=AirPlay&mode=read&sampleformat=44100:16:2
           - --stream.source=tcp://$(LINE_IN_CAMERA_SERVICE_HOST):$(LINE_IN_CAMERA_SERVICE_PORT_AUDIO)?name=Camera&mode=client
 - |-
   apiVersion: networking.k8s.io/v1
