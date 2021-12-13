@@ -12,6 +12,12 @@ patchesJSON6902:
     - op: replace
       path: /metadata/name
       value: snapclient-sideboard
+    - op: add
+      path: /spec/template/spec/containers/0/command/-
+      value: -s
+    - op: add
+      path: /spec/template/spec/containers/0/command/-
+      value: front:CARD=CODEC,DEV=0
 patchesStrategicMerge:
 - |-
   apiVersion: apps/v1
