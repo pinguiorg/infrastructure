@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+- ../../../base/snapcast/snapclient
+commonLabels:
+  app.kubernetes.io/instance: shi
+patchesJSON6902:
+- target:
+    kind: Deployment
+    name: snapclient
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: snapclient-shi
+    - op: add
+      path: /spec/template/spec/containers/0/command/-
+      value: -s
+    - op: add
+      path: /spec/template/spec/containers/0/command/-
+      value: front
+patchesStrategicMerge:
+- |-
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: snapclient
+  spec:
+    template:
+      spec:
+        hostname: shi
+        containers:
+        - name: snapclient
+          resources:
+            limits:
+              squat.ai/audio: 1
+        nodeName: shi
