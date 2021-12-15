@@ -20,6 +20,7 @@ spec:
       containers:
       - name: snapclient
         image: saiyato/snapclient
+        imagePullPolicy: IfNotPresent
         command:
         - /usr/local/bin/snapclient
         - -h

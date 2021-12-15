@@ -51,6 +51,7 @@ spec:
       containers:
       - name: snapserver
         image: saiyato/snapserver
+        imagePullPolicy: IfNotPresent
         command:
         - /usr/local/bin/snapserver
         args: []
