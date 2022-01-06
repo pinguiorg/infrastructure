@@ -4,3 +4,14 @@ bases:
 - ../../base/binomial
 resources:
 - manifests/secret-sealed.yaml
+patchesStrategicMerge:
+- |-
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: food-scraper
+  spec:
+    template:
+      spec:
+        nodeSelector:
+          topology.kubernetes.io/region: hetzner-workers
