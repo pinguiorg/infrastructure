@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: unpoller
+commonLabels:
+  app.kubernetes.io/component: exporter
+  app.kubernetes.io/name: unpoller
+  app.kubernetes.io/part-of: unpoller
+resources:
+- namespace.yaml
+- manifests/deployment.yaml
+- manifests/podmonitor.yaml
+- manifests/rbac.yaml

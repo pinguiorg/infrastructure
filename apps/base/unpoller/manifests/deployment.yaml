@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unpoller
+  namespace: unpoller
+spec:
+  replicas: 1
+  selector:
+  template:
+    metadata:
+    spec:
+      containers:
+      - name: unpoller
+        image: golift/unifi-poller:latest
+        ports:
+        - containerPort: 9130
+          name: tcp
+          protocol: TCP
+        - containerPort: 9130
+          name: udp
+          protocol: UDP
+        volumeMounts:
+        - name: config
+          mountPath: /etc/unifi-poller/up.conf
+          subPath: unpoller.conf
+      volumes:
+      - name: config
+        secret:
+          secretName: unpoller
