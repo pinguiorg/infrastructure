@@ -51,7 +51,7 @@ locals {
 
 data "cloudflare_zones" "squat" {
   filter {
-    name        = local.squat_domain
+    name = local.squat_domain
   }
 }
 
