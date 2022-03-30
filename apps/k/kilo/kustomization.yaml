@@ -15,10 +15,10 @@ patchesStrategicMerge:
       spec:
         containers:
         - name: kilo
-          image: quay.io/kilo/kilo:cad15d99617757e51412fb67d42a663e5482759c
+          image: squat/kilo:e598102f047c031f89e711926e96213f24c96f10
         initContainers:
         - name: install-cni
-          image: quay.io/kilo/kilo:cad15d99617757e51412fb67d42a663e5482759c
+          image: squat/kilo:e598102f047c031f89e711926e96213f24c96f10
 patchesJSON6902:
 - patch: |-
     - op: add
