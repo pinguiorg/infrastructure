@@ -27,4 +27,4 @@ patchesStrategicMerge:
           resources:
             limits:
               squat.ai/audio: 1
-        nodeName: tiantao
+        nodeName: liao
