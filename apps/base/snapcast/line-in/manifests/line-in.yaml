@@ -17,19 +17,6 @@ metadata:
 spec:
   type: ClusterIP
   clusterIP: None
-  ports:
-  - name: http
-    protocol: TCP
-    port: 80
-    targetPort: http
-  - name: audio
-    protocol: TCP
-    port: 1704
-    targetPort: audio
-  - name: tcp
-    protocol: TCP
-    port: 1705
-    targetPort: tcp
 ---
 apiVersion: apps/v1
 kind: StatefulSet

@@ -54,6 +54,7 @@ spec:
         imagePullPolicy: IfNotPresent
         command:
         - /usr/local/bin/snapserver
+        - --http.doc_root=/usr/share/snapserver/snapweb
         args: []
         ports:
         - name: http
