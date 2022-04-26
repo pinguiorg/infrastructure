@@ -7,6 +7,8 @@ resources:
 - manifests/grafana-dashboardDatasources-secret-sealed.yaml
 - manifests/prometheus-roleSpecificNamespaces.yaml
 - manifests/prometheus-roleBindingSpecificNamespaces.yaml
+- manifests/kube-controller-manager-prometheus-discovery-service.yaml
+- manifests/kube-scheduler-prometheus-discovery-service.yaml
 patchesStrategicMerge:
 - manifests/patch-alertmanager-secret-sealed.yaml
 - manifests/patch-alertmanager-service.yaml
