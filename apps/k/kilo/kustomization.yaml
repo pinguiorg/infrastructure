@@ -3,22 +3,6 @@ kind: Kustomization
 namespace: kube-system
 bases:
 - ../../base/kilo
-patchesStrategicMerge:
-- |-
-  apiVersion: apps/v1
-  kind: DaemonSet
-  metadata:
-    name: kilo
-    namespace: kube-system
-  spec:
-    template:
-      spec:
-        containers:
-        - name: kilo
-          image: squat/kilo:e598102f047c031f89e711926e96213f24c96f10
-        initContainers:
-        - name: install-cni
-          image: squat/kilo:e598102f047c031f89e711926e96213f24c96f10
 patchesJSON6902:
 - patch: |-
     - op: add
