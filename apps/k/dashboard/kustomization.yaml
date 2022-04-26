@@ -4,7 +4,6 @@ bases:
 - ../../base/dashboard
 resources:
 - manifests/csrf-secret-sealed.yaml
-- manifests/key-holder-secret-sealed.yaml
 patchesStrategicMerge:
 - |-
   apiVersion: networking.k8s.io/v1

@@ -20,6 +20,15 @@ spec:
   selector:
     app.kubernetes.io/name: kubernetes-dashboard
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/name: kubernetes-dashboard
+  name: kubernetes-dashboard-key-holder
+  namespace: dashboard
+type: Opaque
+---
 kind: ConfigMap
 apiVersion: v1
 metadata:
