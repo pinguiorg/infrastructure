@@ -125,9 +125,12 @@ spec:
       labels:
         app.kubernetes.io/name: kubernetes-dashboard
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: kubernetes-dashboard
-        image: kubernetesui/dashboard:v2.2.0
+        image: kubernetesui/dashboard:v2.5.1
         ports:
         - containerPort: 9090
           protocol: TCP
@@ -190,12 +193,13 @@ spec:
     metadata:
       labels:
         k8s-app: dashboard-metrics-scraper
-      annotations:
-        seccomp.security.alpha.kubernetes.io/pod: 'runtime/default'
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: dashboard-metrics-scraper
-          image: kubernetesui/metrics-scraper:v1.0.6
+          image: kubernetesui/metrics-scraper:v1.0.7
           ports:
             - containerPort: 8000
               protocol: TCP
