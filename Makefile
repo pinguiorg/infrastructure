@@ -6,7 +6,7 @@ SEALED_SECRETS := $(addsuffix -sealed.yaml,$(basename $(SECRETS)))
 MONITORING_MANIFESTS = $(shell find apps/base/monitoring/setup apps/base/monitoring -maxdepth 1 -type f -name '*.yaml' | sed 's|^apps/base/monitoring/||g' | grep -v 'kustomization\.yaml$$' | grep -v '-secret.yaml$$' | grep -v '^patch-.*.yaml$$')
 INGRESS_NGINX_MANIFESTS = $(shell find apps/base/ingress-nginx/manifests -maxdepth 1 -type f -name '*.yaml' | sed 's|^apps/base/ingress-nginx/manifests/||g' | grep -v 'kustomization\.yaml$$' | grep -v '-secret.yaml$$' | grep -v '^patch-.*.yaml$$')
 
-TEST_IMAGE := stefanprodan/kube-tools
+TEST_IMAGE := stefanprodan/kube-tools:v1.7.1
 KUSTOMIZE_VER ?= 4.2.0
 CONTAINERIZE_TEST ?= true
 TEST_PREFIX :=
@@ -34,7 +34,7 @@ test:
 		for k in $$(grep -r -l "^kind: Kustomization$$" $(addsuffix /$(CLUSTER), apps clusters) | grep "kustomization\.yaml$$"); do \
 			echo "testing $$k"; \
 			kustomize build $$(dirname $$k) > /dev/null && \
-			kustomize build $$(dirname $$k) | kubeval --ignore-missing-schemas --strict; \
+			kustomize build $$(dirname $$k) | kubeconform --ignore-missing-schemas --strict; \
 		done \
 	$(TEST_SUFIX)
 
