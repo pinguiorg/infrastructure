@@ -6,6 +6,10 @@ locals {
     "185.199.109.153",
     "185.199.110.153",
     "185.199.111.153",
+    "2606:50c0:8000::153",
+    "2606:50c0:8001::153",
+    "2606:50c0:8002::153",
+    "2606:50c0:8003::153",
   ]
 
   improvemx_records = [
@@ -37,7 +41,7 @@ resource "cloudflare_record" "github" {
   name    = "@"
   value   = element(local.github_ips, count.index)
   ttl     = 300
-  type    = "A"
+  type    = can(cidrnetmask(format("%s/0", element(local.github_ips, count.index)))) ? "A" : "AAAA"
   zone_id = cloudflare_zone.binomial.id
 }
 

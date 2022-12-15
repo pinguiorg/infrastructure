@@ -13,7 +13,12 @@ locals {
     "185.199.109.153",
     "185.199.110.153",
     "185.199.111.153",
+    "2606:50c0:8000::153",
+    "2606:50c0:8001::153",
+    "2606:50c0:8002::153",
+    "2606:50c0:8003::153",
   ]
+
 }
 
 resource "cloudflare_zone" "squat" {
@@ -77,6 +82,6 @@ resource "cloudflare_record" "github_pages" {
   count   = length(local.github_ips)
   zone_id = cloudflare_zone.squat.id
   name    = "@"
-  type    = "A"
+  type    = can(cidrnetmask(format("%s/0", element(local.github_ips, count.index)))) ? "A" : "AAAA"
   value   = element(local.github_ips, count.index)
 }
