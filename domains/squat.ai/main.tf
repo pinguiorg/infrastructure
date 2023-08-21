@@ -87,9 +87,8 @@ resource "cloudflare_record" "github_pages" {
 }
 
 resource "cloudflare_record" "github_pages_bonk" {
-  count   = length(local.github_ips)
   zone_id = cloudflare_zone.squat.id
   name    = "bonk"
-  type    = can(cidrnetmask(format("%s/0", element(local.github_ips, count.index)))) ? "A" : "AAAA"
-  value   = element(local.github_ips, count.index)
+  type    = "CNAME"
+  value   = "squat.github.io"
 }
